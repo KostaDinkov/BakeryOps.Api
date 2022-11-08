@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using Orders.ProductsDB;
 
 internal class Program
 {
@@ -22,6 +23,11 @@ internal class Program
 
 
         app.MapGet("/", () => "Hello World!");
+        app.MapGet("/products/{id}", (int id) => ProductsDB.GetProduct(id));
+        app.MapGet("products", () => ProductsDB.GetProducts());
+        app.MapPost("products", (Product product) => ProductsDB.CreateProduct(product));
+        app.MapPut("products", (Product product) => ProductsDB.UpdateProduct(product));
+        app.MapDelete("products/{id}", (int id) => ProductsDB.DeleteProduct(id));
 
         app.Run();
     }
