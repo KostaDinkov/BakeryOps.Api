@@ -1,6 +1,7 @@
 using Microsoft.OpenApi.Models;
 using Orders.ProductsDB;
 using Microsoft.EntityFrameworkCore;
+
 using Orders.Models;
 using Product = Orders.Models.Product;
 
@@ -10,9 +11,9 @@ internal class Program
     private static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
+        var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddDbContext<OrdersDB>(options => options.UseInMemoryDatabase("items"));
+        builder.Services.AddSqlite<OrdersDB>(connectionString);
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Orders", Description = "Application for customer orders", Version = "v1" });
