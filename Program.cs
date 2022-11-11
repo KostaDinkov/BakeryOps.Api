@@ -13,6 +13,7 @@ internal class Program
         var app = builder.Build();
         app.ConfigureSwagger();
         app.MapProductEndpoints();
+        app.MapOrderEndpoints();
         // Load Products
         app.Run();
     }
