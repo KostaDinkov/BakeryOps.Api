@@ -2,6 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Orders.Data;
 using System.Globalization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
 
 namespace Orders.StartUp;
 
@@ -57,11 +62,11 @@ public static class MapEndpoints
 
     public static WebApplication MapOrderEndpoints(this WebApplication app)
     {
-        app.MapGet("/api/orders/", async (OrdersDB db) =>
+        app.MapGet("/api/orders", async (OrdersDB db) =>
         {
             var orders = await db.Orders.ToListAsync();
             return orders;
-        });
+        }).RequireAuthorization();
         app.MapGet("/api/orders/forDate({date})", async (OrdersDB db, string date) =>
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
@@ -84,7 +89,45 @@ public static class MapEndpoints
 
             return orders;
         });
+        app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
+        {
+            return await db.Orders.FindAsync(id);
+        });
 
+        app.MapPost("/api/orders", async (OrdersDB db, Order order) =>
+        {
+            await db.Orders.AddAsync(order);
+            return Results.Created($"/api/orders/{order.Id}", order);
+        });
+
+        app.MapPut("/api/orders/{id}", async (OrdersDB db, Order update, int id) =>
+        {
+            var order = await db.Orders.FindAsync(id);
+            if(order is null)
+            {
+                return Results.NotFound();
+            }
+
+            order.OperatorId = update.Id;
+            order.CreatedDate = update.CreatedDate;
+            order.PickupDate = update.PickupDate;
+            order.ClientName = update.ClientName;
+            order.ClientPhone = update.ClientPhone;
+            order.AdvancePaiment = update.AdvancePaiment;
+            order.IsPaid = update.IsPaid;
+            order.Status = update.Status;
+            order.OrderItems = update.OrderItems;
+
+            await db.SaveChangesAsync();
+            return Results.Ok();
+
+        });
+
+        return app;
+    }
+    public static WebApplication MapSecurityEndpoints(this WebApplication app)
+    {
+       
         return app;
     }
 
