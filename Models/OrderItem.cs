@@ -20,4 +20,19 @@
         public virtual Order Order { get; set; }
         public virtual int OrderId { get; set; }
     }
+
+    public class NewOrderItemDTO
+    {
+        
+        public int ProductId { get; set; }
+
+        public double ProductAmount { get; set; }
+
+        public string Description { get; set; }
+
+        public string CakeFoto { get; set; }
+        public string CakeTitle { get; set; }
+        
+        
+    }
 }

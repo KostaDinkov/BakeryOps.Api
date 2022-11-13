@@ -65,9 +65,9 @@ public static class MapEndpoints
     {
         app.MapGet("/api/orders", async (OrdersDB db) =>
         {
-            var orders = await db.Orders.ToListAsync();
+            var orders = await db.Orders.Include(o=>o.OrderItems).ToListAsync();
             return orders;
-        }).RequireAuthorization();
+        });
         app.MapGet("/api/orders/forDate({date})", async (OrdersDB db, string date) =>
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
@@ -86,7 +86,7 @@ public static class MapEndpoints
             var date1Parsed = DateTime.ParseExact(date1, format, CultureInfo.InvariantCulture);
             var date2Parsed = DateTime.ParseExact(date2, format, CultureInfo.InvariantCulture);
 
-            var orders = await db.Orders.Where(order =>order.PickupDate<=date2Parsed && order.PickupDate>=date1Parsed).ToListAsync();
+            var orders = await db.Orders.Where(order => order.PickupDate <= date2Parsed && order.PickupDate >= date1Parsed).ToListAsync();
 
             return orders;
         });
@@ -95,16 +95,56 @@ public static class MapEndpoints
             return await db.Orders.FindAsync(id);
         });
 
-        app.MapPost("/api/orders", async (OrdersDB db, Order order) =>
+        app.MapPost("/api/orders", async (OrdersDB db, NewOrderDTO orderDto) =>
         {
-            await db.Orders.AddAsync(order);
+
+            var order = new Order()
+            {
+                ClientName = orderDto.ClientName,
+                ClientPhone = orderDto.ClientPhone,
+                AdvancePaiment = orderDto.AdvancePaiment,
+                CreatedDate = DateTime.Now,
+                IsPaid = orderDto.IsPaid,
+                OperatorId = orderDto.OperatorId,
+                PickupDate = orderDto.PickupDate,
+                Status = Status.Incomplete
+            };
+            var result = await db.Orders.AddAsync(order);
+
+            foreach (var item in orderDto.OrderItems)
+            {
+
+                var product = await db.Products.FindAsync(item.ProductId);
+                if (product is null)
+                {
+                    return Results.NotFound($"Product not found - id={item.ProductId}");
+                }
+                var orderItem = new OrderItem()
+                {
+                    CakeFoto = item.CakeFoto,
+                    CakeTitle = item.CakeTitle,
+                    Description = item.Description,
+                    IsComplete = false,
+                    IsInProgress = false,
+                    Order = result.Entity,
+                    OrderId = result.Entity.Id,
+                    Product = product,
+                    ProductAmount = item.ProductAmount,
+                    ProductId = item.ProductId
+                };
+
+                order.OrderItems.Add(orderItem);
+            }
+
+            await db.SaveChangesAsync();            
+
             return Results.Created($"/api/orders/{order.Id}", order);
         });
 
         app.MapPut("/api/orders/{id}", async (OrdersDB db, Order update, int id) =>
         {
             var order = await db.Orders.FindAsync(id);
-            if(order is null)
+            if (order is null)
             {
                 return Results.NotFound();
             }
@@ -122,6 +162,19 @@ public static class MapEndpoints
             await db.SaveChangesAsync();
             return Results.Ok();
 
+        });
+
+        app.MapDelete("api/orders/{id}", async (OrdersDB db, int id) =>
+        {
+            var order = await db.Orders.FindAsync(id);
+            if (order is null)
+            {
+                return Results.NotFound();
+            }
+
+            db.Orders.Remove(order);
+            await db.SaveChangesAsync();
+            return Results.Ok();
         });
 
         return app;
