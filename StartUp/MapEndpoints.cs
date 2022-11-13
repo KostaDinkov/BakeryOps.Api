@@ -26,7 +26,12 @@ public static class MapEndpoints
             return Results.Created($"/products/{product.Id}", product);
         });
 
-        app.MapGet("/products/{id}", async (OrdersDB db, int id) => await db.Products.FindAsync(id));
+        app.MapGet("/products/{id}", async (OrdersDB db, int id) =>
+            await db.Products.FindAsync(id) is Product product ?
+               Results.Ok(product) :
+               Results.NotFound()
+
+        );
 
         app.MapPut("/products/{id}", async (OrdersDB db, Product update, int id) =>
         {
@@ -65,7 +70,7 @@ public static class MapEndpoints
     {
         app.MapGet("/api/orders", async (OrdersDB db) =>
         {
-            var orders = await db.Orders.Include(o=>o.OrderItems).ToListAsync();
+            var orders = await db.Orders.Include(o => o.OrderItems).ToListAsync();
             return orders;
         });
         app.MapGet("/api/orders/forDate({date})", async (OrdersDB db, string date) =>
@@ -92,7 +97,17 @@ public static class MapEndpoints
         });
         app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
         {
-            return await db.Orders.FindAsync(id);
+            var order = await db.Orders.FindAsync(id);
+            if (order is null)
+            {
+                return Results.NotFound();
+                
+            }
+            else
+            {
+                return Results.Ok(order);
+            }
+            
         });
 
         app.MapPost("/api/orders", async (OrdersDB db, NewOrderDTO orderDto) =>
@@ -136,7 +151,7 @@ public static class MapEndpoints
                 order.OrderItems.Add(orderItem);
             }
 
-            await db.SaveChangesAsync();            
+            await db.SaveChangesAsync();
 
             return Results.Created($"/api/orders/{order.Id}", order);
         });
@@ -157,7 +172,17 @@ public static class MapEndpoints
             order.AdvancePaiment = update.AdvancePaiment;
             order.IsPaid = update.IsPaid;
             order.Status = update.Status;
-            order.OrderItems = update.OrderItems;
+            foreach(var item in update.OrderItems)
+            {
+                var orderItem = await db.OrderItems.FindAsync(item.Id);
+                orderItem.Description = item.Description;
+                orderItem.CakeFoto = item.CakeFoto;
+                orderItem.CakeTitle = item.CakeTitle;
+                orderItem.ProductId = item.ProductId;
+                orderItem.ProductAmount = item.ProductAmount;
+                orderItem.IsInProgress = item.IsInProgress;
+                orderItem.IsComplete = item.IsComplete;
+            }
 
             await db.SaveChangesAsync();
             return Results.Ok();
@@ -167,6 +192,8 @@ public static class MapEndpoints
         app.MapDelete("api/orders/{id}", async (OrdersDB db, int id) =>
         {
             var order = await db.Orders.FindAsync(id);
+
+
             if (order is null)
             {
                 return Results.NotFound();
