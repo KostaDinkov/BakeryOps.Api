@@ -8,21 +8,22 @@ namespace Orders.StartUp
 {
     public static class DependencyInjectionSetup
     {
-        public static IServiceCollection ConfigureServices (this IServiceCollection services,WebApplicationBuilder builder)
+        public static readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        public static IServiceCollection ConfigureServices(this IServiceCollection services, WebApplicationBuilder builder)
         {
-            
+
             var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
-            
+
             services.AddSqlite<OrdersDB>(connectionString);
-            
+
             services.AddEndpointsApiExplorer();
 
             services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Orders", Description = "Application for customer orders", Version = "v1" });
-                
+
             });
-            
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -40,6 +41,18 @@ namespace Orders.StartUp
                     ValidateIssuerSigningKey = true
                 };
             });
+
+            
+
+            services.AddCors(options =>
+                {
+                    options.AddPolicy(name: MyAllowSpecificOrigins,
+                        policy =>
+                        {
+                            policy.WithOrigins("http://localhost","https://localhost:3000","http://localhost:3000");
+                        });
+                }
+            );
 
             return services;
         }

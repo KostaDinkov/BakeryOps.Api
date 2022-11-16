@@ -70,7 +70,7 @@ public static class MapEndpoints
     {
         app.MapGet("/api/orders", async (OrdersDB db) =>
         {
-            var orders = await db.Orders.Include(o => o.OrderItems).ToListAsync();
+            var orders = await db.Orders.Include(o => o.OrderItems).GroupBy(o=>o.PickupDate).ToListAsync();
             return orders;
         });
         app.MapGet("/api/orders/forDate({date})", async (OrdersDB db, string date) =>

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Orders.Models;
 
@@ -10,9 +11,11 @@ using Orders.Models;
 namespace Orders.Migrations
 {
     [DbContext(typeof(OrdersDB))]
-    partial class OrdersDBModelSnapshot : ModelSnapshot
+    [Migration("20221116093836_SeparateDateTimeInOrder")]
+    partial class SeparateDateTimeInOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -44,10 +47,6 @@ namespace Orders.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("PickupDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PickupTime")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
