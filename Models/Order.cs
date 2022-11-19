@@ -35,6 +35,8 @@
         
         public DateTime PickupDate { get; set; }
 
+        public string PickupTime { get; set; }
+
         public string ClientName { get; set; }
         public string ClientPhone { get; set; }
 

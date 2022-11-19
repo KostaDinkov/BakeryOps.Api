@@ -122,7 +122,9 @@ public static class MapEndpoints
                 IsPaid = orderDto.IsPaid,
                 OperatorId = orderDto.OperatorId,
                 PickupDate = orderDto.PickupDate,
-                Status = Status.Incomplete
+                Status = Status.Incomplete,
+                PickupTime = orderDto.PickupTime,
+                
             };
             var result = await db.Orders.AddAsync(order);
 

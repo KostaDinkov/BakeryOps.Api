@@ -49,7 +49,8 @@ namespace Orders.StartUp
                     options.AddPolicy(name: MyAllowSpecificOrigins,
                         policy =>
                         {
-                            policy.WithOrigins("http://localhost","https://localhost:3000","http://localhost:3000");
+                            policy.WithOrigins("http://localhost", "https://localhost:3000", "http://localhost:3000")
+                            .AllowAnyHeader();
                         });
                 }
             );
