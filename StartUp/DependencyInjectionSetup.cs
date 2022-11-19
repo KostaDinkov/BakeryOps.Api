@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orders.Models;
@@ -42,7 +43,18 @@ namespace Orders.StartUp
                 };
             });
 
-            
+            services.AddHttpLogging(logging =>
+            {
+                logging.LoggingFields = HttpLoggingFields.All;
+                //logging.RequestHeaders.Add("sec-ch-ua");
+                //logging.ResponseHeaders.Add("MyResponseHeader");
+                logging.MediaTypeOptions.AddText("application/javascript");
+                logging.RequestBodyLogLimit = 4096;
+                logging.ResponseBodyLogLimit = 4096;
+
+            });
+
+
 
             services.AddCors(options =>
                 {
@@ -50,7 +62,8 @@ namespace Orders.StartUp
                         policy =>
                         {
                             policy.WithOrigins("http://localhost", "https://localhost:3000", "http://localhost:3000")
-                            .AllowAnyHeader();
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
                         });
                 }
             );

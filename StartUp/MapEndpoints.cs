@@ -174,9 +174,13 @@ public static class MapEndpoints
             order.AdvancePaiment = update.AdvancePaiment;
             order.IsPaid = update.IsPaid;
             order.Status = update.Status;
+            order.OrderItems = new List<OrderItem>();
+            
             foreach(var item in update.OrderItems)
             {
-                var orderItem = await db.OrderItems.FindAsync(item.Id);
+                
+                var orderItem = new OrderItem();
+                                                    
                 orderItem.Description = item.Description;
                 orderItem.CakeFoto = item.CakeFoto;
                 orderItem.CakeTitle = item.CakeTitle;
@@ -184,10 +188,11 @@ public static class MapEndpoints
                 orderItem.ProductAmount = item.ProductAmount;
                 orderItem.IsInProgress = item.IsInProgress;
                 orderItem.IsComplete = item.IsComplete;
+                order.OrderItems.Add(orderItem);
             }
 
             await db.SaveChangesAsync();
-            return Results.Ok();
+            return Results.Ok(order);
 
         });
 

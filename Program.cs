@@ -17,6 +17,7 @@ internal class Program
 
         var app = builder.Build();
         app.ConfigureSwagger();
+        app.UseHttpLogging();
         app.UseCors(DependencyInjectionSetup.MyAllowSpecificOrigins);
         app.UseAuthentication();
         app.UseAuthorization();
