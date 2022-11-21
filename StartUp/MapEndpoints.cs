@@ -169,6 +169,7 @@ public static class MapEndpoints
             order.OperatorId = update.Id;
             order.CreatedDate = update.CreatedDate;
             order.PickupDate = update.PickupDate;
+            order.PickupTime = update.PickupTime;
             order.ClientName = update.ClientName;
             order.ClientPhone = update.ClientPhone;
             order.AdvancePaiment = update.AdvancePaiment;
