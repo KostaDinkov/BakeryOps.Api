@@ -73,7 +73,7 @@ public static class MapEndpoints
             var orders = await db.Orders.Include(o => o.OrderItems).GroupBy(o=>o.PickupDate).ToListAsync();
             return orders;
         });
-        app.MapGet("/api/orders/forDate({date})", async (OrdersDB db, string date) =>
+        app.MapGet("/api/orders/forDate/{date}", async (OrdersDB db, string date) =>
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
             var format = "dd-MM-yyyy";
