@@ -63,7 +63,8 @@ namespace Orders.StartUp
                         {
                             policy.WithOrigins("http://localhost", "https://localhost:3000", "http://localhost:3000")
                             .AllowAnyHeader()
-                            .AllowAnyMethod();
+                            .AllowAnyMethod()
+                            .AllowCredentials();
                         });
                 }
             );

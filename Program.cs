@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Orders.StartUp;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
+using Orders.Hubs;
 
 internal class Program
 {
@@ -13,6 +14,7 @@ internal class Program
         builder.Services.ConfigureServices(builder);
         builder.Services.AddAuthorization();
         builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+        builder.Services.AddSignalR();
                
 
         var app = builder.Build();
@@ -25,6 +27,7 @@ internal class Program
         app.MapProductEndpoints();
         app.MapOrderEndpoints();
         app.MapSecurityEndpoints(builder.Configuration);
+        app.MapHub<EventHub>("/eventHub");
   
         app.Run();
     }
