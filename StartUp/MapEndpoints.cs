@@ -72,7 +72,7 @@ public static class MapEndpoints
         {
             var orders = await db.Orders.Include(o => o.OrderItems).GroupBy(o=>o.PickupDate).ToListAsync();
             return orders;
-        });
+        }).RequireAuthorization();
         app.MapGet("/api/orders/forDate/{date}", async (OrdersDB db, string date) =>
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
@@ -82,7 +82,7 @@ public static class MapEndpoints
             var orders = await db.Orders.Where(order => order.PickupDate.Day == dateParsed.Day && order.PickupDate.Month == dateParsed.Month && order.PickupDate.Year == dateParsed.Year).ToListAsync();
 
             return orders;
-        });
+        }).RequireAuthorization(); ;
 
         app.MapGet("/api/orders/between({date1})and({date2})", async (OrdersDB db, string date1, string date2) =>
         {
@@ -94,7 +94,7 @@ public static class MapEndpoints
             var orders = await db.Orders.Where(order => order.PickupDate <= date2Parsed && order.PickupDate >= date1Parsed).ToListAsync();
 
             return orders;
-        });
+        }).RequireAuthorization(); ;
         app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
         {
             var order = await db.Orders.FindAsync(id);
@@ -108,7 +108,7 @@ public static class MapEndpoints
                 return Results.Ok(order);
             }
             
-        });
+        }).RequireAuthorization(); ;
 
         app.MapPost("/api/orders", async (OrdersDB db, NewOrderDTO orderDto) =>
         {
@@ -156,7 +156,7 @@ public static class MapEndpoints
             await db.SaveChangesAsync();
 
             return Results.Created($"/api/orders/{order.Id}", order);
-        });
+        }).RequireAuthorization(); ;
 
         app.MapPut("/api/orders/{id}", async (OrdersDB db, Order update, int id) =>
         {
@@ -195,7 +195,7 @@ public static class MapEndpoints
             await db.SaveChangesAsync();
             return Results.Ok(order);
 
-        });
+        }).RequireAuthorization(); ;
 
         app.MapDelete("api/orders/{id}", async (OrdersDB db, int id) =>
         {
@@ -210,7 +210,7 @@ public static class MapEndpoints
             db.Orders.Remove(order);
             await db.SaveChangesAsync();
             return Results.Ok();
-        });
+        }).RequireAuthorization(); ;
 
         return app;
     }
