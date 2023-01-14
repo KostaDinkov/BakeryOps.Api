@@ -28,6 +28,7 @@ internal class Program
         app.MapOrderEndpoints();
         app.MapSecurityEndpoints(builder.Configuration);
         app.MapHub<EventHub>("/eventHub");
+        app.MapControllers();
   
         app.Run();
     }

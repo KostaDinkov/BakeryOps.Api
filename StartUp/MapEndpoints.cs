@@ -17,7 +17,7 @@ public static class MapEndpoints
     {
         app.MapGet("/", () => "Hello World!");
 
-        app.MapGet("/products", async (OrdersDB db) => await db.Products.ToListAsync());
+        
 
         app.MapPost("/products", async (OrdersDB db, Product product) =>
         {
