@@ -24,7 +24,7 @@ internal class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.MapProductEndpoints();
+        
         app.MapOrderEndpoints();
         app.MapSecurityEndpoints(builder.Configuration);
         app.MapHub<EventHub>("/eventHub");
