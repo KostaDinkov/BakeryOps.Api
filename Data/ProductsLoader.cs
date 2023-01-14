@@ -7,9 +7,9 @@ namespace Orders.Data
 {
     public static class ProductsLoader
     {
-        public static async Task SyncProductsData(OrdersDB db)
+        public static async Task SyncProductsData(OrdersDB db, string serverAddress, string dbPath)
         {
-            FbConnection fbConnection = new FbConnection(@"Server=192.168.1.126;Port=3050;User=SYSDBA;Password=masterkey;Database=C:/Gensoft/Sklad.GDB;Charset=WIN1251");
+            FbConnection fbConnection = new FbConnection($"Server={serverAddress};Port=3050;User=SYSDBA;Password=masterkey;Database={dbPath};Charset=WIN1251");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             fbConnection.Open();
             string sql = "select GRUPA, Stoka, Code, COALESCE (CENA_PROD_DR1,0) as CENA_PROD_DR1, COALESCE(CENA_PROD_ED1,0) as CENA_PROD_ED1 from STOKI_DEF\r\n"+

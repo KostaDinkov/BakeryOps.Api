@@ -14,10 +14,13 @@ namespace Orders.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly OrdersDB db;
+        private readonly IConfiguration configuration;
 
-        public ProductsController(OrdersDB db)
+        public ProductsController(OrdersDB db, IConfiguration config)
         {
             this.db = db;   
+            this.configuration = config;
+            Console.WriteLine(config);
         }
 
         [HttpGet]
@@ -81,7 +84,7 @@ namespace Orders.Controllers
         [HttpGet("syncDatabase")]
         public async Task<ActionResult> SyncDatabase()
         {
-            await ProductsLoader.SyncProductsData(db);
+            await ProductsLoader.SyncProductsData(db, configuration["Gensoft:ServerAddress"], configuration["Gensoft:DatabasePath"]);
             return Ok();
         }
     }
