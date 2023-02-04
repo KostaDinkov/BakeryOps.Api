@@ -22,28 +22,29 @@ public static class MapEndpoints
             var orders = await db.Orders.Include(o => o.OrderItems).GroupBy(o=>o.PickupDate).ToListAsync();
             return orders;
         }).RequireAuthorization();
-        app.MapGet("/api/orders/forDate/{date}", async (OrdersDB db, string date) =>
-        {
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            var format = "dd-MM-yyyy";
-            var dateParsed = DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
 
-            var orders = await db.Orders.Where(order => order.PickupDate.Day == dateParsed.Day && order.PickupDate.Month == dateParsed.Month && order.PickupDate.Year == dateParsed.Year).ToListAsync();
+        //app.MapGet("/api/orders/forDate/{date}", async (OrdersDB db, string date) =>
+        //{
+        //    CultureInfo provider = CultureInfo.InvariantCulture;
+        //    var format = "dd-MM-yyyy";
+        //    var dateParsed = DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
 
-            return orders;
-        }).RequireAuthorization(); ;
+        //    var orders = await db.Orders.Where(order => order.PickupDate.Day == dateParsed.Day && order.PickupDate.Month == dateParsed.Month && order.PickupDate.Year == dateParsed.Year).ToListAsync();
 
-        app.MapGet("/api/orders/between({date1})and({date2})", async (OrdersDB db, string date1, string date2) =>
-        {
-            CultureInfo provider = CultureInfo.InvariantCulture;
-            var format = "dd-MM-yyyy";
-            var date1Parsed = DateTime.ParseExact(date1, format, CultureInfo.InvariantCulture);
-            var date2Parsed = DateTime.ParseExact(date2, format, CultureInfo.InvariantCulture);
+        //    return orders;
+        //}).RequireAuthorization(); ;
 
-            var orders = await db.Orders.Where(order => order.PickupDate <= date2Parsed && order.PickupDate >= date1Parsed).ToListAsync();
+        //app.MapGet("/api/orders/between({date1})and({date2})", async (OrdersDB db, string date1, string date2) =>
+        //{
+        //    CultureInfo provider = CultureInfo.InvariantCulture;
+        //    var format = "dd-MM-yyyy";
+        //    var date1Parsed = DateTime.ParseExact(date1, format, CultureInfo.InvariantCulture);
+        //    var date2Parsed = DateTime.ParseExact(date2, format, CultureInfo.InvariantCulture);
 
-            return orders;
-        }).RequireAuthorization(); ;
+        //    var orders = await db.Orders.Where(order => order.PickupDate <= date2Parsed && order.PickupDate >= date1Parsed).ToListAsync();
+
+        //    return orders;
+        //}).RequireAuthorization(); ;
         app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
         {
             var order = await db.Orders.FindAsync(id);

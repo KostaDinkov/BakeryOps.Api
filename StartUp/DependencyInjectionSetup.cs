@@ -4,6 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orders.Models;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Orders.StartUp
 {
@@ -16,7 +17,11 @@ namespace Orders.StartUp
             var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
 
             services.AddSqlite<OrdersDB>(connectionString);
-            services.AddControllers();
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.WriteIndented = true;
+            });
 
             services.AddEndpointsApiExplorer();
 
