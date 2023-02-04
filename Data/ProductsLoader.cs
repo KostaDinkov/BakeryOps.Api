@@ -12,7 +12,7 @@ namespace Orders.Data
             FbConnection fbConnection = new FbConnection($"Server={serverAddress};Port=3050;User=SYSDBA;Password=masterkey;Database={dbPath};Charset=WIN1251");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
             fbConnection.Open();
-            string sql = "select GRUPA, Stoka, Code, COALESCE (CENA_PROD_DR1,0) as CENA_PROD_DR1, COALESCE(CENA_PROD_ED1,0) as CENA_PROD_ED1 from STOKI_DEF\r\n"+
+            string sql = "select GRUPA, Stoka, Code, COALESCE (CENA_PROD_DR1,0) as CENA_PROD_DR1, COALESCE(CENA_PROD_ED1,0) as CENA_PROD_ED1, DATE_CREATED from STOKI_DEF\r\n" +
                         "where IS_ACTIVE ='Y'\r\n"+
                         "And GRUPA not in ('Опаковки', 'Бонбони','Аромати, Овкусители, Подобрители','Основни','Кутии','Готови Смеси и Полуфабрикати','Санитарни Консумативи', 'Фарситури','Кафе','Шоколади',\r\n 'Ядки и Плодове','Консумативи','Заготовки','15 септември / 24 май', 'Баба Марта', 'Великден','Временни','Декорации','Разходи','Суровини','Търговия')\r\n"+
                         "order by Grupa";
@@ -26,6 +26,7 @@ namespace Orders.Data
                 update.Code = reader.GetString(2).Trim();
                 update.PriceDrebno = (decimal)reader.GetDouble(3);
                 update.PriceEdro = (decimal)reader.GetDouble(4);
+                update.DateCreated = reader.GetDateTime(5).ToString();
 
 
                 var existing = db.Products.FirstOrDefault(p => p.Name == update.Name && p.Code == update.Code);

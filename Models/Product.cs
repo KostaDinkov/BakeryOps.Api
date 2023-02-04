@@ -10,6 +10,8 @@ public class Product
     public decimal PriceEdro { get; set; } = 0;
 
     public string? Code { get; set; }
+
+    public string? DateCreated { get; set; }
 }
 
 
