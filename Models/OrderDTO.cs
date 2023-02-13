@@ -1,18 +1,13 @@
 ﻿namespace Orders.Models
 {
-    public enum Status
+    public class OrderDTO
     {
-        Complete,
-        Incomplete,
-
-    }
-
-    public class Order
-    {
-        public int Id { get; set; }
+       public int Id { get; set; }
         public int OperatorId { get; set; }
-        public DateTime CreatedDate { get; set; }
+        
         public DateTime PickupDate { get; set; }
+
+        
         public string PickupTime { get; set; }
 
         public string ClientName { get; set; }
@@ -24,7 +19,9 @@
 
         public Status Status { get; set; } = Status.Incomplete;
 
+        
+
         // OrderItems
-        public ICollection<OrderItem> OrderItems { get; set; }=new List<OrderItem>();
+        public ICollection<OrderItemDTO> OrderItems { get; set; } = new List<OrderItemDTO>();
     }
 }

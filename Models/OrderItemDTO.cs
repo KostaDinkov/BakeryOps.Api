@@ -1,9 +1,8 @@
 ﻿namespace Orders.Models
 {
-    public class OrderItem
+    public class OrderItemDTO
     {
-        public int Id { get; set; }
-        public Product Product { get; set; }
+        
         public int ProductId { get; set; }
 
         public double ProductAmount { get; set; }
@@ -17,7 +16,6 @@
 
         public bool IsComplete { get; set; }
 
-        public virtual Order Order { get; set; }
-        public virtual int OrderId { get; set; }
+
     }
 }

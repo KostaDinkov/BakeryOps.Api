@@ -45,122 +45,122 @@ public static class MapEndpoints
 
         //    return orders;
         //}).RequireAuthorization(); ;
-        app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
-        {
-            var order = await db.Orders.FindAsync(id);
-            if (order is null)
-            {
-                return Results.NotFound();
+        //app.MapGet("/api/orders/{id}", async (OrdersDB db, int id) =>
+        //{
+        //    var order = await db.Orders.FindAsync(id);
+        //    if (order is null)
+        //    {
+        //        return Results.NotFound();
                 
-            }
-            else
-            {
-                return Results.Ok(order);
-            }
+        //    }
+        //    else
+        //    {
+        //        return Results.Ok(order);
+        //    }
             
-        }).RequireAuthorization(); ;
+        //}).RequireAuthorization(); ;
 
-        app.MapPost("/api/orders", async (OrdersDB db, NewOrderDTO orderDto) =>
-        {
+        //app.MapPost("/api/orders", async (OrdersDB db, NewOrderDTO orderDto) =>
+        //{
 
-            var order = new Order()
-            {
-                ClientName = orderDto.ClientName,
-                ClientPhone = orderDto.ClientPhone,
-                AdvancePaiment = orderDto.AdvancePaiment,
-                CreatedDate = DateTime.Now,
-                IsPaid = orderDto.IsPaid,
-                OperatorId = orderDto.OperatorId,
-                PickupDate = orderDto.PickupDate,
-                Status = Status.Incomplete,
-                PickupTime = orderDto.PickupTime,
+        //    var order = new Order()
+        //    {
+        //        ClientName = orderDto.ClientName,
+        //        ClientPhone = orderDto.ClientPhone,
+        //        AdvancePaiment = orderDto.AdvancePaiment,
+        //        CreatedDate = DateTime.Now,
+        //        IsPaid = orderDto.IsPaid,
+        //        OperatorId = orderDto.OperatorId,
+        //        PickupDate = orderDto.PickupDate,
+        //        Status = Status.Incomplete,
+        //        PickupTime = orderDto.PickupTime,
                 
-            };
-            var result = await db.Orders.AddAsync(order);
+        //    };
+        //    var result = await db.Orders.AddAsync(order);
 
-            foreach (var item in orderDto.OrderItems)
-            {
+        //    foreach (var item in orderDto.OrderItems)
+        //    {
 
-                var product = await db.Products.FindAsync(item.ProductId);
-                if (product is null)
-                {
-                    return Results.NotFound($"Product not found - id={item.ProductId}");
-                }
-                var orderItem = new OrderItem()
-                {
-                    CakeFoto = item.CakeFoto,
-                    CakeTitle = item.CakeTitle,
-                    Description = item.Description,
-                    IsComplete = false,
-                    IsInProgress = false,
-                    Order = result.Entity,
-                    OrderId = result.Entity.Id,
-                    Product = product,
-                    ProductAmount = item.ProductAmount,
-                    ProductId = item.ProductId
-                };
+        //        var product = await db.Products.FindAsync(item.ProductId);
+        //        if (product is null)
+        //        {
+        //            return Results.NotFound($"Product not found - id={item.ProductId}");
+        //        }
+        //        var orderItem = new OrderItem()
+        //        {
+        //            CakeFoto = item.CakeFoto,
+        //            CakeTitle = item.CakeTitle,
+        //            Description = item.Description,
+        //            IsComplete = false,
+        //            IsInProgress = false,
+        //            Order = result.Entity,
+        //            OrderId = result.Entity.Id,
+        //            Product = product,
+        //            ProductAmount = item.ProductAmount,
+        //            ProductId = item.ProductId
+        //        };
 
-                order.OrderItems.Add(orderItem);
-            }
+        //        order.OrderItems.Add(orderItem);
+        //    }
 
-            await db.SaveChangesAsync();
+        //    await db.SaveChangesAsync();
 
-            return Results.Created($"/api/orders/{order.Id}", order);
-        }).RequireAuthorization(); ;
+        //    return Results.Created($"/api/orders/{order.Id}", order);
+        //}).RequireAuthorization(); ;
 
-        app.MapPut("/api/orders/{id}", async (OrdersDB db, Order update, int id) =>
-        {
-            var order = await db.Orders.FindAsync(id);
-            if (order is null)
-            {
-                return Results.NotFound();
-            }
+        //app.MapPut("/api/orders/{id}", async (OrdersDB db, Order update, int id) =>
+        //{
+        //    var order = await db.Orders.FindAsync(id);
+        //    if (order is null)
+        //    {
+        //        return Results.NotFound();
+        //    }
 
-            order.OperatorId = update.Id;
-            order.CreatedDate = update.CreatedDate;
-            order.PickupDate = update.PickupDate;
-            order.PickupTime = update.PickupTime;
-            order.ClientName = update.ClientName;
-            order.ClientPhone = update.ClientPhone;
-            order.AdvancePaiment = update.AdvancePaiment;
-            order.IsPaid = update.IsPaid;
-            order.Status = update.Status;
-            order.OrderItems = new List<OrderItem>();
+        //    order.OperatorId = update.Id;
+        //    order.CreatedDate = update.CreatedDate;
+        //    order.PickupDate = update.PickupDate;
+        //    order.PickupTime = update.PickupTime;
+        //    order.ClientName = update.ClientName;
+        //    order.ClientPhone = update.ClientPhone;
+        //    order.AdvancePaiment = update.AdvancePaiment;
+        //    order.IsPaid = update.IsPaid;
+        //    order.Status = update.Status;
+        //    order.OrderItems = new List<OrderItem>();
             
-            foreach(var item in update.OrderItems)
-            {
+        //    foreach(var item in update.OrderItems)
+        //    {
                 
-                var orderItem = new OrderItem();
+        //        var orderItem = new OrderItem();
                                                     
-                orderItem.Description = item.Description;
-                orderItem.CakeFoto = item.CakeFoto;
-                orderItem.CakeTitle = item.CakeTitle;
-                orderItem.ProductId = item.ProductId;
-                orderItem.ProductAmount = item.ProductAmount;
-                orderItem.IsInProgress = item.IsInProgress;
-                orderItem.IsComplete = item.IsComplete;
-                order.OrderItems.Add(orderItem);
-            }
+        //        orderItem.Description = item.Description;
+        //        orderItem.CakeFoto = item.CakeFoto;
+        //        orderItem.CakeTitle = item.CakeTitle;
+        //        orderItem.ProductId = item.ProductId;
+        //        orderItem.ProductAmount = item.ProductAmount;
+        //        orderItem.IsInProgress = item.IsInProgress;
+        //        orderItem.IsComplete = item.IsComplete;
+        //        order.OrderItems.Add(orderItem);
+        //    }
 
-            await db.SaveChangesAsync();
-            return Results.Ok(order);
+        //    await db.SaveChangesAsync();
+        //    return Results.Ok(order);
 
-        }).RequireAuthorization(); ;
+        //}).RequireAuthorization(); ;
 
-        app.MapDelete("api/orders/{id}", async (OrdersDB db, int id) =>
-        {
-            var order = await db.Orders.FindAsync(id);
+        //app.MapDelete("api/orders/{id}", async (OrdersDB db, int id) =>
+        //{
+        //    var order = await db.Orders.FindAsync(id);
 
 
-            if (order is null)
-            {
-                return Results.NotFound();
-            }
+        //    if (order is null)
+        //    {
+        //        return Results.NotFound();
+        //    }
 
-            db.Orders.Remove(order);
-            await db.SaveChangesAsync();
-            return Results.Ok();
-        }).RequireAuthorization(); ;
+        //    db.Orders.Remove(order);
+        //    await db.SaveChangesAsync();
+        //    return Results.Ok();
+        //}).RequireAuthorization(); ;
 
         return app;
     }
