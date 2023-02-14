@@ -5,25 +5,25 @@
 namespace Orders.Migrations
 {
     /// <inheritdoc />
-    public partial class SeparateDateTimeInOrderNew : Migration
+    public partial class ClientIsSpecialPrice : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "PickupTime",
-                table: "Orders",
-                type: "TEXT",
+            migrationBuilder.AddColumn<bool>(
+                name: "IsSpecialPrice",
+                table: "Clients",
+                type: "bit",
                 nullable: false,
-                defaultValue: "");
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PickupTime",
-                table: "Orders");
+                name: "IsSpecialPrice",
+                table: "Clients");
         }
     }
 }

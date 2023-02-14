@@ -25,6 +25,7 @@ namespace Orders.Controllers
         [HttpPost]
         public  async Task<IActionResult> GetToken(UserCredentialsDTO credentials)
         {
+            //TODO create authentication logic
             if (credentials.UserName == "kodin" && credentials.Password == "kodin")
             {
                 var issuer = config["Jwt:Issuer"];
@@ -48,7 +49,7 @@ namespace Orders.Controllers
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                var jstToken = tokenHandler.WriteToken(token);
+                //var jstToken = tokenHandler.WriteToken(token);
                 var stringToken = tokenHandler.WriteToken(token);
                 return Ok(stringToken);
             }

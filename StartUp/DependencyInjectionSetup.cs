@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Orders.Models;
+using Orders.Data;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -14,9 +14,10 @@ namespace Orders.StartUp
         public static IServiceCollection ConfigureServices(this IServiceCollection services, WebApplicationBuilder builder)
         {
 
-            var connectionString = builder.Configuration.GetConnectionString("Orders") ?? "Data Source=Orders.db";
+            var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
-            services.AddSqlite<OrdersDB>(connectionString);
+            //services.AddSqlite<OrdersDB>(connectionString);
+            services.AddSqlServer<OrdersDB>(connectionString);
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;

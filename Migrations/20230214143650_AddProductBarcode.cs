@@ -5,23 +5,24 @@
 namespace Orders.Migrations
 {
     /// <inheritdoc />
-    public partial class AddProductDateCreated : Migration
+    public partial class AddProductBarcode : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "DateCreated",
+                name: "Barcode",
                 table: "Products",
-                type: "TEXT",
-                nullable: true);
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "DateCreated",
+                name: "Barcode",
                 table: "Products");
         }
     }

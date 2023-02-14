@@ -24,10 +24,12 @@ namespace Orders.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetAllProducts()
+        public async Task<IActionResult> GetAllProducts()
         {
-            return Ok(db.Products.ToListAsync());
+            var products = await db.Products.ToListAsync();
+            return Ok(products);
         }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
