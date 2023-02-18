@@ -1,8 +1,8 @@
-﻿namespace Orders.Models
+﻿namespace Orders.Models.DTOs
 {
     public class OrderItemDTO
     {
-        
+
         public int ProductId { get; set; }
 
         public double ProductAmount { get; set; }

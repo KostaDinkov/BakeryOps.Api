@@ -1,4 +1,4 @@
-﻿namespace Orders.Models
+﻿namespace Orders.Models.DTOs
 {
     public class UserCredentialsDTO
     {
