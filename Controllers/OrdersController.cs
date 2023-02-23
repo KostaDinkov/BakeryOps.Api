@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Orders.Data;
 using Orders.Models;
 using Orders.Models.DTOs;
+using Orders.Services;
 using System.Globalization;
 using System.Linq;
 
@@ -17,11 +18,13 @@ namespace Orders.Controllers
     {
         private readonly OrdersDB db;
         private readonly IConfiguration configuration;
+        private readonly IOrdersService ordersService;
 
-        public OrdersController(OrdersDB db, IConfiguration configuration)
+        public OrdersController(OrdersDB db, IConfiguration configuration, IOrdersService ordersService)
         {
             this.db = db;
             this.configuration = configuration;
+            this.ordersService = ordersService;
         }
 
         [HttpGet("{id}")]
@@ -35,9 +38,9 @@ namespace Orders.Controllers
             return Ok(order);
         }
 
-        [HttpGet("getBetween/{startDate}/{endDate}")]
+        [HttpGet("between")]
 
-        public async Task<IActionResult> GetOrdersForPeriod(string startDate, string endDate) 
+        public async Task<IActionResult> GetOrdersBetween([FromQuery] string startDate,[FromQuery] string endDate) 
         {
             CultureInfo provider = CultureInfo.InvariantCulture;
             var format = "dd-MM-yyyy";
@@ -65,49 +68,10 @@ namespace Orders.Controllers
 
         public async Task<IActionResult> PostOrder(OrderDTO orderDto)
         {
-            var order = new Order()
-            {
-                ClientName = orderDto.ClientName,
-                ClientPhone = orderDto.ClientPhone,
-                AdvancePaiment = orderDto.AdvancePaiment,
-                CreatedDate = DateTime.Now,
-                IsPaid = orderDto.IsPaid,
-                OperatorId = orderDto.OperatorId,
-                PickupDate = orderDto.PickupDate,
-                Status = Status.Incomplete,
-                PickupTime = orderDto.PickupTime,
+            var orderId = await ordersService.AddOrder(orderDto);
+            
 
-            };
-            var result = await db.Orders.AddAsync(order);
-
-            foreach (var item in orderDto.OrderItems)
-            {
-
-                var product = await db.Products.FindAsync(item.ProductId);
-                if (product is null)
-                {
-                    return NotFound($"Product not found - id={item.ProductId}");
-                }
-                var orderItem = new OrderItem()
-                {
-                    CakeFoto = item.CakeFoto,
-                    CakeTitle = item.CakeTitle,
-                    Description = item.Description,
-                    IsComplete = false,
-                    IsInProgress = false,
-                    Order = result.Entity,
-                    OrderId = result.Entity.Id,
-                    Product = product,
-                    ProductAmount = item.ProductAmount,
-                    ProductId = item.ProductId
-                };
-
-                order.OrderItems.Add(orderItem);
-            }
-
-            await db.SaveChangesAsync();
-
-            return Created($"/api/orders/{order.Id}", order);
+            return Redirect($"/api/orders/{orderId}");
         }
 
         [HttpPut("{id}")]
@@ -120,14 +84,14 @@ namespace Orders.Controllers
                 return NotFound();
             }
 
-            order.OperatorId = update.Id;
-            order.PickupDate = update.PickupDate;
-            order.PickupTime = update.PickupTime;
+            order.OperatorId = (int)update.Id;
+            order.PickupDate = (DateTime)update.PickupDate;
+            
             order.ClientName = update.ClientName;
             order.ClientPhone = update.ClientPhone;
-            order.AdvancePaiment = update.AdvancePaiment;
-            order.IsPaid = update.IsPaid;
-            order.Status = update.Status;
+            order.AdvancePaiment = (decimal)update.AdvancePaiment;
+            order.IsPaid = (bool)update.IsPaid;
+            order.Status = (Status)update.Status;
             
             //TODO clear the old order items from the database
             order.OrderItems = new List<OrderItem>();

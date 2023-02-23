@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Orders.API.Services;
 using Orders.Data;
+using Orders.Services;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -18,6 +20,7 @@ namespace Orders.StartUp
 
             //services.AddSqlite<OrdersDB>(connectionString);
             services.AddSqlServer<OrdersDB>(connectionString);
+
             services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
@@ -55,6 +58,11 @@ namespace Orders.StartUp
                 });
             });
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddScoped<IOrdersService, OrdersService>();
+            services.AddScoped<IClientsService, ClientsService>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -83,8 +91,6 @@ namespace Orders.StartUp
                 logging.ResponseBodyLogLimit = 4096;
 
             });
-
-
 
             services.AddCors(options =>
                 {
