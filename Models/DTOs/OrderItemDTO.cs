@@ -12,9 +12,9 @@
         public string CakeFoto { get; set; }
         public string CakeTitle { get; set; }
 
-        public bool IsInProgress { get; set; }
+        public bool IsInProgress { get; set; } = true;
 
-        public bool IsComplete { get; set; }
+        public bool IsComplete { get; set; } = false;
 
 
     }
