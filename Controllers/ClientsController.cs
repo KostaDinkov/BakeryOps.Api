@@ -25,8 +25,15 @@ namespace Orders.API.Controllers
         public async Task<IActionResult> GetClients()
         {
             var clients = await clientsService.GetAllClients();
-
             return Ok(clients);
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetClientById(int id)
+        {
+            var client = await clientsService.GetClientById(id);
+            if(client == null) return NotFound();
+
+            return Ok(client);
         }
         [HttpPost]
         public async Task<IActionResult> CreateClient(ClientDTO newClient)

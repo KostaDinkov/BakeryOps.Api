@@ -28,7 +28,7 @@ namespace Orders.API.Services
 
         public async Task<Client> DeleteClient(int id)
         {
-            var client = dbContext.Clients.Find(id);
+            var client = await dbContext.Clients.FindAsync(id);
             if (client is null)
             {
                 throw new InvalidOperationException();
@@ -38,10 +38,11 @@ namespace Orders.API.Services
             return client;
         }
 
-        public async Task<List<Client>> GetAllClients()
+        public async Task<List<ClientDTO>> GetAllClients()
         {
             var clients = await dbContext.Clients.ToListAsync();
-            return clients;
+            var clientDtos = clients.Select(c => mapper.Map<ClientDTO>(c)).ToList();
+            return clientDtos;
         }
 
         public async Task<Client> GetClientById(int id)

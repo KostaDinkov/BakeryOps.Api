@@ -6,10 +6,11 @@ namespace Orders.Data
     public class OrdersDB : DbContext
     {
         public OrdersDB(DbContextOptions options) : base(options) { }
+        public OrdersDB() : base() { }
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
-        public DbSet<Client> Clients { get; set; } = null!;
+        public virtual DbSet<Client> Clients { get; set; } = null!;
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

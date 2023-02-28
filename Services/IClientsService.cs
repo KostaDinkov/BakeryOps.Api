@@ -8,7 +8,7 @@ namespace Orders.API.Services
     {
 
         Task<Client> GetClientById(int id);
-        Task<List<Client>> GetAllClients();
+        Task<List<ClientDTO>> GetAllClients();
         Task<Client> AddClient(ClientDTO client);
         Task<Client> DeleteClient(int id);
         
