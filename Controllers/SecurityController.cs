@@ -14,12 +14,13 @@ namespace Orders.Controllers
     public class SecurityController : Controller
     {
 
-        ILogger logger;
+        
         IConfiguration config;
-        public SecurityController( IConfiguration config )
+        public SecurityController( IConfiguration config)
         {
             
             this.config= config;
+            
         }
 
         [HttpPost]

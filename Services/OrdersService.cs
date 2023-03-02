@@ -12,11 +12,13 @@ namespace Orders.Services
 
         private readonly OrdersDB dbContext;
         private readonly IMapper mapper;
-        public OrdersService(OrdersDB ordersDb, IMapper mapper)
+        private readonly ILogger logger;
+        public OrdersService(OrdersDB ordersDb, IMapper mapper, ILogger<OrdersService> logger)
         {
 
             this.mapper = mapper;
             this.dbContext = ordersDb;
+            this.logger = logger;
         }
         public async Task<Order> GetOrderById(int id)
         {
@@ -24,10 +26,16 @@ namespace Orders.Services
 
         }
 
-        public async Task<IEnumerable<Order>> GetOrdersBetween(DateTime startDate, DateTime endDate)
+        public async Task<List<List<Order>>> GetOrdersBetween(DateTime startDate, DateTime endDate)
         {
-
-            var orders = await dbContext.Orders.Where(o => o.PickupDate >= startDate && o.PickupDate <= endDate).ToListAsync();
+            var orders = await dbContext.Orders
+                .Where(o => o.PickupDate.Date >= startDate && o.PickupDate.Date <= endDate)
+                .GroupBy(o => o.PickupDate.Date)
+                .OrderBy(g=>g.Key)
+                .Select(g => g.OrderBy(o => o.PickupDate.TimeOfDay).ToList())
+                .ToListAsync();
+                
+                logger.LogInformation(orders.ToString());
             return orders;
         }
         public async Task<IEnumerable<Order>> GetOrdersFor(DateTime startDate)

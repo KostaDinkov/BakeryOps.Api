@@ -23,7 +23,6 @@ namespace Orders.API.Services
             await dbContext.Clients.AddAsync(client);
             await dbContext.SaveChangesAsync();
             return client;
-
         }
 
         public async Task<Client> DeleteClient(int id)
