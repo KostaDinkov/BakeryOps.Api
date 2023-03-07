@@ -10,6 +10,8 @@ public class Product
     public decimal PriceDrebno { get; set; } = 0;
     public decimal PriceEdro { get; set; } = 0;
 
+    public string Unit { get; set; } = String.Empty;
+
     public string? Code { get; set; }
 
     public DateTime DateCreated { get; set; }
