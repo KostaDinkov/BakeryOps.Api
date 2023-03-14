@@ -62,8 +62,21 @@ namespace Orders.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateOrder(int id, OrderDTO update)
         {
-            var order = await ordersService.UpdateOrder(id, update);
-            return Ok(order);
+            try
+            {
+                var order = await ordersService.UpdateOrder(id, update);
+                if(order == null)
+                {
+                    return BadRequest();
+                }
+                return Ok(order);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            
         }
 
         [HttpDelete("{id}")]

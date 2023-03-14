@@ -4,9 +4,11 @@ namespace Orders.Hubs
     public class EventHub:Hub
 
     {
-        public async Task UpdateClients(string user, string message)
+        public async Task UpdateClients()
         {
-            await Clients.All.SendAsync("UpdateOrders", user, message);
+            
+            await Clients.AllExcept(Context.ConnectionId).SendAsync("UpdateOrders");
+            
         }
     }
 }

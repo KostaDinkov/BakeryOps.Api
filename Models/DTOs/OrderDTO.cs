@@ -24,8 +24,6 @@ namespace Orders.Models.DTOs
 
         public Status? Status { get; set; } 
 
-
-
         // OrderItems
         public ICollection<OrderItemDTO> OrderItems { get; set; } = new List<OrderItemDTO>();
     }

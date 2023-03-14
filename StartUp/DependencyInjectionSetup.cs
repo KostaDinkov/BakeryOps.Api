@@ -92,6 +92,8 @@ namespace Orders.StartUp
 
             });
 
+            
+
             services.AddCors(options =>
                 {
                     options.AddPolicy(name: MyAllowSpecificOrigins,

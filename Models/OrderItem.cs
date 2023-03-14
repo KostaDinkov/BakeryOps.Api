@@ -17,6 +17,8 @@
 
         public bool IsComplete { get; set; } = false;
 
+        
+
         public virtual Order Order { get; set; }
         public virtual int OrderId { get; set; }
     }
