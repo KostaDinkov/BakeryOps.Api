@@ -34,8 +34,10 @@ namespace Orders.Services
                 .OrderBy(g=>g.Key)
                 .Select(g => g.OrderBy(o => o.PickupDate.TimeOfDay).ToList())
                 .ToListAsync();
+            
+            logger.Log(LogLevel.Information, "Orders Requested");
+            
                 
-                logger.LogInformation(orders.ToString());
             return orders;
         }
         public async Task<IEnumerable<Order>> GetOrdersFor(DateTime startDate)

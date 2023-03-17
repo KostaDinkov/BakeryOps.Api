@@ -10,11 +10,13 @@ namespace Orders.API.Services
     {
         private readonly OrdersDB dbContext;
         private readonly IMapper mapper;
+        private ILogger logger;
 
-        public ClientsService(OrdersDB dbContext, IMapper mapper)
+        public ClientsService(OrdersDB dbContext, IMapper mapper, ILogger<ClientsService> logger)
         {
             this.dbContext = dbContext;
-            this.mapper = mapper; 
+            this.mapper = mapper;
+            this.logger = logger;
         }
 
         public async Task<Client> AddClient(ClientDTO newClient)
@@ -41,6 +43,7 @@ namespace Orders.API.Services
         {
             var clients = await dbContext.Clients.ToListAsync();
             var clientDtos = clients.Select(c => mapper.Map<ClientDTO>(c)).ToList();
+            logger.Log(LogLevel.Information, "Clients Requested");
             return clientDtos;
         }
 
