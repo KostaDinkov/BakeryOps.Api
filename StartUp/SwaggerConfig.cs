@@ -10,8 +10,6 @@ public static class SwaggerConfig
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders API V1");
-                
-                
             });
         }
         

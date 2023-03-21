@@ -92,17 +92,27 @@ namespace Orders.StartUp
 
             });
 
-            
-
             services.AddCors(options =>
                 {
                     options.AddPolicy(name: MyAllowSpecificOrigins,
                         policy =>
                         {
-                            policy.WithOrigins("http://localhost", "https://localhost:3000", "http://localhost:3000")
+                            policy.SetIsOriginAllowed((origin) =>
+                            {
+                                if (origin.StartsWith("http://192.168.1.") || origin.StartsWith("https://192.168.1."))
+                                {
+                                    return true;
+                                }
+                                else if (origin.Contains("localhost"))
+                                {
+                                    return true;
+                                }
+                                return false;
+                            })
                             .AllowAnyHeader()
                             .AllowAnyMethod()
                             .AllowCredentials();
+                            
                         });
                 }
             );

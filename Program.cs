@@ -15,6 +15,7 @@ namespace Orders
             builder.Logging.ClearProviders();
             builder.Logging.AddConsole();
             builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
+            
             builder.Services.ConfigureServices(builder);
             
             builder.Services.AddAuthorization();
