@@ -55,9 +55,9 @@ namespace Orders.Services
             {
                 Client client = await dbContext.Clients.FindAsync(orderDto.ClientId);
                 order.Client = client;
-                client.Orders.Add(order);
+                //client.Orders.Add(order);
                 order.ClientName = client.Name;
-                order.ClientPhone = client.Phone;
+                //order.ClientPhone = client.Phone;
             }
 
             await dbContext.Orders.AddAsync(order);
