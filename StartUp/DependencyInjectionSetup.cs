@@ -103,6 +103,10 @@ namespace Orders.StartUp
                                 {
                                     return true;
                                 }
+                                else if (origin.Contains("www.bakeryops.home") || origin.StartsWith("http://bakeryops.home") || origin.StartsWith("https://bakeryops.home"))
+                                {
+                                    return true;
+                                }
                                 else if (origin.Contains("localhost"))
                                 {
                                     return true;
