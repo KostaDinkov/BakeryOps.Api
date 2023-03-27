@@ -8,7 +8,7 @@ using Orders.Data;
 
 #nullable disable
 
-namespace Orders.Migrations
+namespace Orders.API.Migrations
 {
     [DbContext(typeof(OrdersDB))]
     partial class OrdersDBModelSnapshot : ModelSnapshot
@@ -133,8 +133,8 @@ namespace Orders.Migrations
                     b.Property<double>("ProductAmount")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -147,15 +147,9 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -166,6 +160,12 @@ namespace Orders.Migrations
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasDiscount")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("KeepPriceDrebno")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -180,6 +180,9 @@ namespace Orders.Migrations
                     b.Property<string>("Unit")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("inPriceList")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 

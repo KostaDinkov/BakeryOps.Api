@@ -9,11 +9,11 @@ using Orders.Data;
 
 #nullable disable
 
-namespace Orders.Migrations
+namespace Orders.API.Migrations
 {
     [DbContext(typeof(OrdersDB))]
-    [Migration("20230214143650_AddProductBarcode")]
-    partial class AddProductBarcode
+    [Migration("20230326155946_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,10 +33,16 @@ namespace Orders.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DiscountPercent")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsCompany")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsSpecialPrice")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -85,10 +91,6 @@ namespace Orders.Migrations
                     b.Property<DateTime>("PickupDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PickupTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -125,14 +127,17 @@ namespace Orders.Migrations
                     b.Property<bool>("IsInProgress")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("ItemUnitPrice")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
                     b.Property<double>("ProductAmount")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
@@ -145,15 +150,9 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.Models.Product", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Barcode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Category")
                         .IsRequired()
@@ -162,8 +161,14 @@ namespace Orders.Migrations
                     b.Property<string>("Code")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DateCreated")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("HasDiscount")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("KeepPriceDrebno")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -175,6 +180,13 @@ namespace Orders.Migrations
                     b.Property<decimal>("PriceEdro")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<string>("Unit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("inPriceList")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");
@@ -182,9 +194,11 @@ namespace Orders.Migrations
 
             modelBuilder.Entity("Orders.Models.Order", b =>
                 {
-                    b.HasOne("Orders.Models.Client", null)
+                    b.HasOne("Orders.Models.Client", "Client")
                         .WithMany("Orders")
                         .HasForeignKey("ClientId");
+
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Orders.Models.OrderItem", b =>

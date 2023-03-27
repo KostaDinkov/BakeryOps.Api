@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Orders.Migrations
+namespace Orders.API.Migrations
 {
     /// <inheritdoc />
     public partial class Initial : Migration
@@ -20,7 +20,9 @@ namespace Orders.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsCompany = table.Column<bool>(type: "bit", nullable: false)
+                    DiscountPercent = table.Column<int>(type: "int", nullable: false),
+                    IsCompany = table.Column<bool>(type: "bit", nullable: false),
+                    IsSpecialPrice = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,14 +33,17 @@ namespace Orders.Migrations
                 name: "Products",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PriceDrebno = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     PriceEdro = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    HasDiscount = table.Column<bool>(type: "bit", nullable: false),
+                    KeepPriceDrebno = table.Column<bool>(type: "bit", nullable: false),
+                    inPriceList = table.Column<bool>(type: "bit", nullable: false),
+                    Unit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Code = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,13 +59,12 @@ namespace Orders.Migrations
                     OperatorId = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     PickupDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    PickupTime = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ClientPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ClientId = table.Column<int>(type: "int", nullable: true),
                     IsPaid = table.Column<bool>(type: "bit", nullable: false),
                     AdvancePaiment = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    ClientId = table.Column<int>(type: "int", nullable: true)
+                    Status = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -78,13 +82,14 @@ namespace Orders.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductAmount = table.Column<double>(type: "float", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CakeFoto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CakeTitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsInProgress = table.Column<bool>(type: "bit", nullable: false),
                     IsComplete = table.Column<bool>(type: "bit", nullable: false),
+                    ItemUnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
