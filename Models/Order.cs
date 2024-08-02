@@ -28,6 +28,6 @@
         public Status Status { get; set; } = Status.Incomplete;
 
         // OrderItems
-        public ICollection<OrderItem> OrderItems { get; set; }=new List<OrderItem>();
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
