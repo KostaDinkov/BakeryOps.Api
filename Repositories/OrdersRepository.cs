@@ -7,8 +7,8 @@ namespace Orders.Repositories
     public class OrdersRepository : IOrdersRepository
     {
 
-        private readonly OrdersDB dbContext;
-        public OrdersRepository(OrdersDB dbContext)
+        private readonly AppDb dbContext;
+        public OrdersRepository(AppDb dbContext)
         {
             this.dbContext = dbContext;
         }

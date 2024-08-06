@@ -8,11 +8,11 @@ namespace Orders.API.Services
 {
     public class ClientsService : IClientsService
     {
-        private readonly OrdersDB dbContext;
+        private readonly AppDb dbContext;
         private readonly IMapper mapper;
         private ILogger logger;
 
-        public ClientsService(OrdersDB dbContext, IMapper mapper, ILogger<ClientsService> logger)
+        public ClientsService(AppDb dbContext, IMapper mapper, ILogger<ClientsService> logger)
         {
             this.dbContext = dbContext;
             this.mapper = mapper;

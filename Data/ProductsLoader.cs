@@ -7,7 +7,7 @@ namespace Orders.Data
 {
     public static class ProductsLoader
     {
-        public static async Task SyncProductsData(OrdersDB db, string serverAddress, string dbPath)
+        public static async Task SyncProductsData(AppDb db, string serverAddress, string dbPath)
         {
             FbConnection fbConnection = new FbConnection($"Server={serverAddress};Port=3050;User=SYSDBA;Password=masterkey;Database={dbPath};Charset=WIN1251");
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);

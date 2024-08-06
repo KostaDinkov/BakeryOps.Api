@@ -18,8 +18,8 @@ namespace Orders.StartUp
 
             var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
-            //services.AddSqlite<OrdersDB>(connectionString);
-            services.AddSqlServer<OrdersDB>(connectionString);
+            //services.AddSqlite<AppDb>(connectionString);
+            services.AddSqlServer<AppDb>(connectionString);
 
             services.AddControllers().AddJsonOptions(options =>
             {

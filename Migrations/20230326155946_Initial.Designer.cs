@@ -11,7 +11,7 @@ using Orders.Data;
 
 namespace Orders.API.Migrations
 {
-    [DbContext(typeof(OrdersDB))]
+    [DbContext(typeof(AppDb))]
     [Migration("20230326155946_Initial")]
     partial class Initial
     {

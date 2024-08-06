@@ -26,7 +26,7 @@ namespace Orders
             var app = builder.Build();
             using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetRequiredService<OrdersDB>();
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDb>();
                 context.Database.EnsureCreated();
             }
             app.ConfigureSwagger();

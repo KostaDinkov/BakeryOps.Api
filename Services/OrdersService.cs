@@ -10,14 +10,14 @@ namespace Orders.Services
     public class OrdersService : IOrdersService
     {
 
-        private readonly OrdersDB dbContext;
+        private readonly AppDb dbContext;
         private readonly IMapper mapper;
         private readonly ILogger logger;
-        public OrdersService(OrdersDB ordersDb, IMapper mapper, ILogger<OrdersService> logger)
+        public OrdersService(AppDb appDb, IMapper mapper, ILogger<OrdersService> logger)
         {
 
             this.mapper = mapper;
-            this.dbContext = ordersDb;
+            this.dbContext = appDb;
             this.logger = logger;
         }
         public async Task<Order> GetOrderById(int id)

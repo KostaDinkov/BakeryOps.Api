@@ -10,7 +10,7 @@ using Orders.Data;
 
 namespace Orders.API.Migrations
 {
-    [DbContext(typeof(OrdersDB))]
+    [DbContext(typeof(AppDb))]
     partial class OrdersDBModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

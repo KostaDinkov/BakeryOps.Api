@@ -3,10 +3,10 @@ using Orders.Models;
 
 namespace Orders.Data
 {
-    public class OrdersDB : DbContext
+    public class AppDb : DbContext
     {
-        public OrdersDB(DbContextOptions options) : base(options) { }
-        public OrdersDB() : base() { }
+        public AppDb(DbContextOptions options) : base(options) { }
+        public AppDb() : base() { }
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;

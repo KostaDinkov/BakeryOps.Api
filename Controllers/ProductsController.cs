@@ -13,10 +13,10 @@ namespace Orders.Controllers
     //[Authorize]
     public class ProductsController : ControllerBase
     {
-        private readonly OrdersDB db;
+        private readonly AppDb db;
         private readonly IConfiguration configuration;
 
-        public ProductsController(OrdersDB db, IConfiguration config)
+        public ProductsController(AppDb db, IConfiguration config)
         {
             this.db = db;   
             this.configuration = config;
