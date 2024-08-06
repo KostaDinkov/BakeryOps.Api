@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
+using BakeryOps.API.Models.DTOs;
+using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Orders.API.Models.DTOs;
-using Orders.API.Services;
-using Orders.Data;
-using Orders.Models;
 
-namespace Orders.API.Controllers
+namespace BakeryOps.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

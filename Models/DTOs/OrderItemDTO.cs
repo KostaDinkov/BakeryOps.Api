@@ -1,4 +1,4 @@
-﻿namespace Orders.Models.DTOs
+﻿namespace BakeryOps.API.Models.DTOs
 {
     public class OrderItemDTO
     {

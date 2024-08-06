@@ -1,7 +1,7 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
 
-namespace Orders.Models;
+namespace BakeryOps.API.Models;
 
 public class Product
 {

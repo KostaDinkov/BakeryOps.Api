@@ -1,8 +1,7 @@
-﻿using Orders.Models.DTOs;
-using Orders.Models;
-using Orders.API.Models.DTOs;
+﻿using BakeryOps.API.Models;
+using BakeryOps.API.Models.DTOs;
 
-namespace Orders.API.Services
+namespace BakeryOps.API.Services
 {
     public interface IClientsService
     {

@@ -1,11 +1,10 @@
-
-using Orders.StartUp;
-using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
-using Orders.Hubs;
-using Orders.Data;
+using BakeryOps.API.Data;
+using BakeryOps.API.Hubs;
+using BakeryOps.API.StartUp;
+using Microsoft.AspNetCore.Http.Json;
 
-namespace Orders
+namespace BakeryOps.API
 {
     public class Program
     {

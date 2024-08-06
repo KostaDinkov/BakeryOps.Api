@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Orders.Models;
+﻿using BakeryOps.API.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Orders.Data
+namespace BakeryOps.API.Data
 {
     public class AppDb : DbContext
     {

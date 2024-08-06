@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Text;
+using System.Text.Json.Serialization;
+using BakeryOps.API.Data;
+using BakeryOps.API.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Orders.API.Services;
-using Orders.Data;
-using Orders.Services;
-using System.Text;
-using System.Text.Json.Serialization;
 
-namespace Orders.StartUp
+namespace BakeryOps.API.StartUp
 {
     public static class DependencyInjectionSetup
     {

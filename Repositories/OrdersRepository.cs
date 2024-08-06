@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Orders.Data;
-using Orders.Models;
+﻿using BakeryOps.API.Data;
+using BakeryOps.API.Models;
+using Microsoft.EntityFrameworkCore;
 
-namespace Orders.Repositories
+namespace BakeryOps.API.Repositories
 {
     public class OrdersRepository : IOrdersRepository
     {

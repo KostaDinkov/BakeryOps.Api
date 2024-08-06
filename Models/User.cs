@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Orders.Models
+namespace BakeryOps.API.Models
 {
     public class User
     {

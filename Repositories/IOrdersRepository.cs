@@ -1,6 +1,6 @@
-﻿using Orders.Models;
+﻿using BakeryOps.API.Models;
 
-namespace Orders.Repositories
+namespace BakeryOps.API.Repositories
 {
     public interface IOrdersRepository
     {

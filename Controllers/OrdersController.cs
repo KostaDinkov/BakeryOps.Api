@@ -1,15 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.ComponentModel.DataAnnotations;
+using BakeryOps.API.Models.DTOs;
+using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Orders.Data;
-using Orders.Models;
-using Orders.Models.DTOs;
-using Orders.Services;
-using System.ComponentModel.DataAnnotations;
-using System.Globalization;
-using System.Linq;
 
-namespace Orders.Controllers
+namespace BakeryOps.API.Controllers
 
 {
     [Route("api/[controller]")]

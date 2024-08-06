@@ -1,4 +1,4 @@
-﻿namespace Orders.StartUp;
+﻿namespace BakeryOps.API.StartUp;
 
 public static class SwaggerConfig
 {

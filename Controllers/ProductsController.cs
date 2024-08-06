@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using BakeryOps.API.Data;
+using BakeryOps.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Orders.Data;
-using Orders.Models;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
-namespace Orders.Controllers
+namespace BakeryOps.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

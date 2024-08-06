@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-namespace Orders.Hubs
+
+namespace BakeryOps.API.Hubs
 {
     public class EventHub:Hub
 

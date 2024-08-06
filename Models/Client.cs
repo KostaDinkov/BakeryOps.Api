@@ -1,4 +1,4 @@
-﻿namespace Orders.Models
+﻿namespace BakeryOps.API.Models
 {
     public class Client
     {

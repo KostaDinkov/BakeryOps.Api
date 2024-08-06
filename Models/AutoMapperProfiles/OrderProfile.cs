@@ -1,8 +1,7 @@
 ﻿using AutoMapper;
-using Orders.API.Models.DTOs;
-using Orders.Models.DTOs;
+using BakeryOps.API.Models.DTOs;
 
-namespace Orders.Models.AutoMapperProfiles
+namespace BakeryOps.API.Models.AutoMapperProfiles
 {
     public class OrderProfile: Profile
     {

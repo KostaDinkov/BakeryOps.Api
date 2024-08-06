@@ -1,4 +1,4 @@
-﻿namespace Orders.API.Validators
+﻿namespace BakeryOps.API.Validators
 {
     public class ValidationResult
     {

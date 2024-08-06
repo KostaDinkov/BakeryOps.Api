@@ -1,6 +1,4 @@
-﻿using Orders.Models;
-
-namespace Orders.API.Models.DTOs
+﻿namespace BakeryOps.API.Models.DTOs
 {
     public class ClientDTO
     {

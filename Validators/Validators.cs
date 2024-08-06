@@ -1,6 +1,6 @@
-﻿using Orders.Models.DTOs;
+﻿using BakeryOps.API.Models.DTOs;
 
-namespace Orders.API.Validators
+namespace BakeryOps.API.Validators
 {
     public static class Validators
     {

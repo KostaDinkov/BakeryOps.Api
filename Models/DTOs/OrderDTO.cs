@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Orders.Models.DTOs
+namespace BakeryOps.API.Models.DTOs
 {
     public class OrderDTO
     {

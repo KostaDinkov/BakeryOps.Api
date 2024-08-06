@@ -1,9 +1,8 @@
-﻿using FirebirdSql.Data.FirebirdClient;
-using FirebirdSql.Data.Client;
-using System.Text;
-using Orders.Models;
+﻿using System.Text;
+using BakeryOps.API.Models;
+using FirebirdSql.Data.FirebirdClient;
 
-namespace Orders.Data
+namespace BakeryOps.API.Data
 {
     public static class ProductsLoader
     {

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using BakeryOps.API.Data;
+using BakeryOps.API.Models;
+using BakeryOps.API.Models.DTOs;
 using Microsoft.EntityFrameworkCore;
-using Orders.API.Models.DTOs;
-using Orders.Data;
-using Orders.Models;
 
-namespace Orders.API.Services
+namespace BakeryOps.API.Services
 {
     public class ClientsService : IClientsService
     {
