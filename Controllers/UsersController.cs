@@ -17,10 +17,10 @@ public class UsersController(IUsersService usersService) : Controller
         return Ok(users);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetUser(Guid id)
+    [HttpGet("{userName}")]
+    public async Task<IActionResult> GetUser(string userName)
     {
-        var user = await usersService.GetUserByIdAsync(id);
+        var user = await usersService.GetUserByNameAsync(userName);
         if (user == null)
         {
             return NotFound();
