@@ -17,9 +17,9 @@ namespace BakeryOps.API.Services
             return users.Select(u => mapper.Map<User, UserDTO>(u)).ToArray();
         }
 
-        public async Task<UserDTO> GetUserByIdAsync(Guid id)
+        public async Task<UserDTO> GetUserByIdAsync(Guid userId)
         {
-            var user = await dbContext.Users.FindAsync(id);
+            var user = await dbContext.Users.FindAsync(userId);
             return mapper.Map<User, UserDTO>(user);
         }
 
@@ -59,7 +59,11 @@ namespace BakeryOps.API.Services
             }
 
             user.UserName = updated.UserName;
-            //TODO: fix logic for updating permissions
+            
+            
+            var userPermissions = dbContext.Permissions.Where(p => p.UserId == id);
+            dbContext.Permissions.RemoveRange(userPermissions);
+            
             user.Permissions.Clear();
             foreach (var permission in updated.Permissions)
             {
@@ -73,10 +77,10 @@ namespace BakeryOps.API.Services
             return await Task.FromResult(updated);
         }
 
-        public async Task DeleteUserAsync(Guid id)
+        public async Task DeleteUserAsync(Guid userId)
         {
             
-            var user = await dbContext.Users.FindAsync(id);
+            var user = await dbContext.Users.FindAsync(userId);
             if (user != null) dbContext.Users.Remove(user);
             await dbContext.SaveChangesAsync();
         }

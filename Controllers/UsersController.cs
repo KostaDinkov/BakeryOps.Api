@@ -29,13 +29,13 @@ public class UsersController(IUsersService usersService) : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddUser(string username, string password)
+    public async Task<IActionResult> AddUser(UserCredentialsDTO credentials)
     {
-        var user = await usersService.CreateUserAsync(username, password);
+        var user = await usersService.CreateUserAsync(credentials.UserName, credentials.Password);
         return Ok(user);
     }
 
-    [HttpPut()]
+    [HttpPut]
     public async Task<IActionResult> UpdateUser( UserDTO update)
     {
         try

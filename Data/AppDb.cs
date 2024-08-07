@@ -12,6 +12,8 @@ namespace BakeryOps.API.Data
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
         public virtual DbSet<Client> Clients { get; set; } = null!;
 
+        public DbSet<Permission> Permissions { get; set; } = null!;
+
 
 
 

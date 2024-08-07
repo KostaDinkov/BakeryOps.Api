@@ -32,7 +32,7 @@ namespace BakeryOps.API.StartUp
 
             builder.Services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "Orders", Description = "Application for customer orders", Version = "v1" });
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "BakeryOps", Description = "Application for bakery management", Version = "v1" });
                 options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
