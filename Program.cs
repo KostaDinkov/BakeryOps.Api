@@ -15,14 +15,11 @@ namespace BakeryOps.API
             builder.Logging.AddConsole();
             builder.Logging.AddFilter("Microsoft.EntityFrameworkCore.Database.Command", LogLevel.Warning);
             
-            builder.Services.ConfigureServices(builder);
+            builder.ConfigureServices();
             
-            builder.Services.AddAuthorization();
-            builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-            builder.Services.AddSignalR();
-
-
+            
             var app = builder.Build();
+            
             using (var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<AppDb>();

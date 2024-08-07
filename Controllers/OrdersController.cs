@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BakeryOps.API.Models.DTOs;
 using BakeryOps.API.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BakeryOps.API.Controllers
@@ -8,7 +9,7 @@ namespace BakeryOps.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class OrdersController : Controller
     {  
         private readonly IOrdersService ordersService;

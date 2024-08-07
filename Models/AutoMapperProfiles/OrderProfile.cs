@@ -10,7 +10,8 @@ namespace BakeryOps.API.Models.AutoMapperProfiles
             CreateMap<Order, OrderDTO>().ReverseMap();           
             CreateMap<OrderItem, OrderItemDTO>().ReverseMap();
             CreateMap<Client, ClientDTO>().ReverseMap();
-            
+            CreateMap<User, UserDTO>().ReverseMap();
+
         }
     }
 

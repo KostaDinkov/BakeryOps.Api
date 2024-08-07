@@ -3,6 +3,7 @@ using System.Text.Json.Serialization;
 using BakeryOps.API.Data;
 using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -12,23 +13,24 @@ namespace BakeryOps.API.StartUp
     public static class DependencyInjectionSetup
     {
         public static readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-        public static IServiceCollection ConfigureServices(this IServiceCollection services, WebApplicationBuilder builder)
+        public static void ConfigureServices(this WebApplicationBuilder builder)
         {
+            
 
             var connectionString = builder.Configuration.GetConnectionString("SqlServer");
 
             //services.AddSqlite<AppDb>(connectionString);
-            services.AddSqlServer<AppDb>(connectionString);
+            builder.Services.AddSqlServer<AppDb>(connectionString);
 
-            services.AddControllers().AddJsonOptions(options =>
+            builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.WriteIndented = true;
             });
 
-            services.AddEndpointsApiExplorer();
+            builder.Services.AddEndpointsApiExplorer();
 
-            services.AddSwaggerGen(options =>
+            builder.Services.AddSwaggerGen(options =>
             {
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "Orders", Description = "Application for customer orders", Version = "v1" });
                 options.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
@@ -57,12 +59,13 @@ namespace BakeryOps.API.StartUp
                 });
             });
 
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-            services.AddScoped<IOrdersService, OrdersService>();
-            services.AddScoped<IClientsService, ClientsService>();
+            builder.Services.AddScoped<IOrdersService, OrdersService>();
+            builder.Services.AddScoped<IClientsService, ClientsService>();
+            builder.Services.AddScoped<IUsersService, UserService>();
 
-            services.AddAuthentication(options =>
+            builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -80,7 +83,7 @@ namespace BakeryOps.API.StartUp
                 };
             });
 
-            services.AddHttpLogging(logging =>
+            builder.Services.AddHttpLogging(logging =>
             {
                 logging.LoggingFields = HttpLoggingFields.All;
                 //logging.RequestHeaders.Add("sec-ch-ua");
@@ -91,7 +94,7 @@ namespace BakeryOps.API.StartUp
 
             });
 
-            services.AddCors(options =>
+            builder.Services.AddCors(options =>
                 {
                     options.AddPolicy(name: MyAllowSpecificOrigins,
                         policy =>
@@ -119,8 +122,11 @@ namespace BakeryOps.API.StartUp
                         });
                 }
             );
+            builder.Services.AddAuthorization();
+            builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            builder.Services.AddSignalR();
 
-            return services;
+
         }
     }
 }
