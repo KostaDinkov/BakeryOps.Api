@@ -7,7 +7,7 @@ namespace BakeryOps.API.Security
         public static HashSet<string> GetApiPermissions()
         {
             var q = from t in Assembly.GetExecutingAssembly().GetTypes()
-                where t.IsClass && t.Namespace == "BakeryOps.Api.Controllers"
+                where t.IsClass && t.Namespace == "BakeryOps.API.Controllers"
                 from m in t.GetMethods()
                 where m.GetCustomAttributes(typeof(PermissionAttribute), false).Length > 0
                 select new

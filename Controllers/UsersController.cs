@@ -1,6 +1,7 @@
 ﻿using BakeryOps.API.Exceptions;
 using BakeryOps.API.Models;
 using BakeryOps.API.Models.DTOs;
+using BakeryOps.API.Security;
 using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace BakeryOps.API.Controllers;
 public class UsersController(IUsersService usersService) : Controller
 {
     [HttpGet]
+    [Permission("users.read")]
     public async Task<IActionResult> GetUsers()
     {
         var users = await usersService.GetUsersAsync();
@@ -29,6 +31,7 @@ public class UsersController(IUsersService usersService) : Controller
     }
 
     [HttpPost]
+    [Permission("users.create")]
     public async Task<IActionResult> AddUser(UserCredentialsDTO credentials)
     {
         var user = await usersService.CreateUserAsync(credentials.UserName, credentials.Password);
@@ -36,6 +39,7 @@ public class UsersController(IUsersService usersService) : Controller
     }
 
     [HttpPut]
+    [Permission("users.create")]
     public async Task<IActionResult> UpdateUser( UserDTO update)
     {
         try
@@ -52,7 +56,7 @@ public class UsersController(IUsersService usersService) : Controller
             return BadRequest(e.Message);
         }
     }
-
+    [Permission("users.delete")]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(Guid id)
     {

@@ -24,6 +24,7 @@ namespace BakeryOps.API.Controllers
             //TODO Fix for production!!!
             var user = new User();
             var pHasher = new PasswordHasher<User>();
+            var allPermissions = SecurityUtils.GetApiPermissions().Select(s=>new Permission(s)).ToList();
             
             if (credentials.UserName == "admin" && credentials.Password == "admin")
             {
@@ -31,7 +32,7 @@ namespace BakeryOps.API.Controllers
                 {
                     UserName = "admin",
                     HashedPassword = pHasher.HashPassword(user, "admin"),
-                    Permissions = SecurityUtils.GetApiPermissions().Select(s=> new Permission(s)).ToList()
+                    Permissions = allPermissions
                 };
             }
             else

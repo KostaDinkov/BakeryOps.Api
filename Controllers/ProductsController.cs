@@ -1,13 +1,15 @@
 ﻿using BakeryOps.API.Data;
 using BakeryOps.API.Models;
+using BakeryOps.API.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
+    
     [Authorize]
     public class ProductsController : ControllerBase
     {
@@ -22,6 +24,7 @@ namespace BakeryOps.API.Controllers
         }
 
         [HttpGet]
+        [Permission("products.read")]
         public async Task<IActionResult> GetAllProducts()
         {
             var products = await db.Products.ToListAsync();

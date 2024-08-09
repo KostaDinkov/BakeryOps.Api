@@ -1,8 +1,10 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using BakeryOps.API.Data;
+using BakeryOps.API.Security;
 using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.IdentityModel.Tokens;
@@ -123,6 +125,7 @@ namespace BakeryOps.API.StartUp
                 }
             );
             builder.Services.AddAuthorization();
+            builder.Services.AddSingleton<IAuthorizationHandler, PermissionHandler>();
             builder.Services.Configure<JsonOptions>(options => options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
             builder.Services.AddSignalR();
 
