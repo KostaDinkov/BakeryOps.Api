@@ -4,6 +4,7 @@ using BakeryOps.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Orders.API.Migrations
 {
     [DbContext(typeof(AppDb))]
-    partial class OrdersDBModelSnapshot : ModelSnapshot
+    [Migration("20240902140142_MaterialsAndDeliveries2")]
+    partial class MaterialsAndDeliveries2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,12 +138,7 @@ namespace Orders.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("VendorId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VendorId");
 
                     b.ToTable("Materials");
                 });
@@ -350,6 +348,21 @@ namespace Orders.API.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("MaterialVendor", b =>
+                {
+                    b.Property<Guid>("MaterialsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("VendorsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("MaterialsId", "VendorsId");
+
+                    b.HasIndex("VendorsId");
+
+                    b.ToTable("MaterialVendor");
+                });
+
             modelBuilder.Entity("BakeryOps.API.Models.Delivery", b =>
                 {
                     b.HasOne("BakeryOps.API.Models.Vendor", "Vendor")
@@ -378,13 +391,6 @@ namespace Orders.API.Migrations
                     b.Navigation("Delivery");
 
                     b.Navigation("Material");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.Material", b =>
-                {
-                    b.HasOne("BakeryOps.API.Models.Vendor", null)
-                        .WithMany("Materials")
-                        .HasForeignKey("VendorId");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
@@ -424,6 +430,21 @@ namespace Orders.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MaterialVendor", b =>
+                {
+                    b.HasOne("BakeryOps.API.Models.Material", null)
+                        .WithMany()
+                        .HasForeignKey("MaterialsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BakeryOps.API.Models.Vendor", null)
+                        .WithMany()
+                        .HasForeignKey("VendorsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("BakeryOps.API.Models.Client", b =>
                 {
                     b.Navigation("Orders");
@@ -442,11 +463,6 @@ namespace Orders.API.Migrations
             modelBuilder.Entity("BakeryOps.API.Models.User", b =>
                 {
                     b.Navigation("Permissions");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.Vendor", b =>
-                {
-                    b.Navigation("Materials");
                 });
 #pragma warning restore 612, 618
         }

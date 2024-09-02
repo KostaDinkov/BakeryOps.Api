@@ -81,6 +81,13 @@ namespace BakeryOps.API.Controllers
 
         }
 
+        [HttpGet]
+        public async  Task<IActionResult> GetPermissions()
+        {
+            var permissions = SecurityUtils.GetApiPermissions();
+            return Ok(permissions);
+        }
+
 
 
     }

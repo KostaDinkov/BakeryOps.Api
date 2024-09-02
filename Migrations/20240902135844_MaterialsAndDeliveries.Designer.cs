@@ -4,6 +4,7 @@ using BakeryOps.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Orders.API.Migrations
 {
     [DbContext(typeof(AppDb))]
-    partial class OrdersDBModelSnapshot : ModelSnapshot
+    [Migration("20240902135844_MaterialsAndDeliveries")]
+    partial class MaterialsAndDeliveries
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -135,12 +138,7 @@ namespace Orders.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("VendorId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("VendorId");
 
                     b.ToTable("Materials");
                 });
@@ -273,6 +271,9 @@ namespace Orders.API.Migrations
                     b.Property<bool>("KeepPriceDrebno")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MaterialId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -291,6 +292,8 @@ namespace Orders.API.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
 
                     b.ToTable("Products");
                 });
@@ -338,6 +341,9 @@ namespace Orders.API.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid?>("MaterialId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -346,6 +352,8 @@ namespace Orders.API.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MaterialId");
 
                     b.ToTable("Vendors");
                 });
@@ -378,13 +386,6 @@ namespace Orders.API.Migrations
                     b.Navigation("Delivery");
 
                     b.Navigation("Material");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.Material", b =>
-                {
-                    b.HasOne("BakeryOps.API.Models.Vendor", null)
-                        .WithMany("Materials")
-                        .HasForeignKey("VendorId");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
@@ -424,6 +425,20 @@ namespace Orders.API.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("BakeryOps.API.Models.Product", b =>
+                {
+                    b.HasOne("BakeryOps.API.Models.Material", null)
+                        .WithMany("Products")
+                        .HasForeignKey("MaterialId");
+                });
+
+            modelBuilder.Entity("BakeryOps.API.Models.Vendor", b =>
+                {
+                    b.HasOne("BakeryOps.API.Models.Material", null)
+                        .WithMany("Vendors")
+                        .HasForeignKey("MaterialId");
+                });
+
             modelBuilder.Entity("BakeryOps.API.Models.Client", b =>
                 {
                     b.Navigation("Orders");
@@ -434,6 +449,13 @@ namespace Orders.API.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("BakeryOps.API.Models.Material", b =>
+                {
+                    b.Navigation("Products");
+
+                    b.Navigation("Vendors");
+                });
+
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
@@ -442,11 +464,6 @@ namespace Orders.API.Migrations
             modelBuilder.Entity("BakeryOps.API.Models.User", b =>
                 {
                     b.Navigation("Permissions");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.Vendor", b =>
-                {
-                    b.Navigation("Materials");
                 });
 #pragma warning restore 612, 618
         }

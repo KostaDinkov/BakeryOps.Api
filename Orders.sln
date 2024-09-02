@@ -4,7 +4,7 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BakeryOps.API", "BakeryOps.API.csproj", "{FB40AD0E-4662-40C2-ACC3-0633F3396958}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BakeryOps.API.Tests", "..\Orders.Tests\BakeryOps.API.Tests.csproj", "{ABDA325F-D6FD-4BB4-AA8A-23368D718671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BakeryOps.API.Tests", "..\BakeryOps.Api.Tests\BakeryOps.API.Tests.csproj", "{ABDA325F-D6FD-4BB4-AA8A-23368D718671}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -10,15 +10,8 @@ namespace BakeryOps.API.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class OrdersController : Controller
-    {  
-        private readonly IOrdersService ordersService;
-
-        public OrdersController(IOrdersService ordersService)
-        { 
-            this.ordersService = ordersService;
-        }
-
+    public class OrdersController(IOrdersService ordersService) : Controller
+    {
         [HttpGet("{id}")]
         public async Task<IActionResult> GetOrder(int id)
         {

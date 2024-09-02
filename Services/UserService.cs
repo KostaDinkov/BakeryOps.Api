@@ -6,6 +6,7 @@ using BakeryOps.API.Models.DTOs;
 using BakeryOps.API.Security;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace BakeryOps.API.Services
 {
@@ -19,7 +20,11 @@ namespace BakeryOps.API.Services
 
         public async Task<UserDTO> GetUserByIdAsync(Guid userId)
         {
-            var user = await dbContext.Users.FindAsync(userId);
+            var user = await dbContext.Users.Include(u=>u.Permissions).FirstOrDefaultAsync(u=>u.Id==userId);
+            if (user == null)
+            {
+                throw new DbServiceException($"User {userId} not found");
+            }
             return mapper.Map<User, UserDTO>(user);
         }
 
@@ -29,16 +34,23 @@ namespace BakeryOps.API.Services
             return mapper.Map<User, UserDTO>(user);
         }
 
-        public async Task<UserDTO> CreateUserAsync(string username, string password)
+        public async Task<UserDTO> CreateUserAsync(NewUserDTO newUser)
         {
             var user = new User
             {
-                UserName = username,
+                UserName = newUser.UserName,
+                FirstName = newUser.FirstName,
+                LastName = newUser.LastName
+
             };
-            user.HashedPassword = new PasswordHasher<User>().HashPassword(user, password);
-            if (dbContext.Users.Any(u => u.UserName == username))
+            user.HashedPassword = new PasswordHasher<User>().HashPassword(user, newUser.Password);
+            if (dbContext.Users.Any(u => u.UserName == newUser.UserName))
             {
-                throw new DbServiceException($"User {username} already exists");
+                throw new DbServiceException($"User {newUser.UserName} already exists");
+            }
+            foreach (var permission in newUser.Permissions)
+            {
+                user.Permissions.Add(new Permission(permission));
             }
 
             dbContext.Users.Add(user);
@@ -49,7 +61,7 @@ namespace BakeryOps.API.Services
 
         
 
-        public async Task<UserDTO> UpdateUserAsync(UserDTO updated)
+        public async Task<UserDTO> UpdateUserAsync(NewUserDTO updated)
         {
             var id = Guid.Parse(updated.Id);
             var user = await dbContext.Users.FindAsync(id);
@@ -72,6 +84,12 @@ namespace BakeryOps.API.Services
 
             user.FirstName = updated.FirstName;
             user.LastName = updated.LastName;
+            //if password is not null, update password
+            if (!string.IsNullOrEmpty(updated.Password))
+            {
+                user.HashedPassword = new PasswordHasher<User>().HashPassword(user, updated.Password);
+            }
+
             await dbContext.SaveChangesAsync();
 
             return await Task.FromResult(updated);

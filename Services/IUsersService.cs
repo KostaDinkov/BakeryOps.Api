@@ -8,8 +8,8 @@ namespace BakeryOps.API.Services
         Task<UserDTO[]> GetUsersAsync();
         Task<UserDTO> GetUserByIdAsync(Guid userId);
         Task<UserDTO> GetUserByNameAsync(string name);
-        Task<UserDTO> CreateUserAsync(string username, string password);
-        Task<UserDTO> UpdateUserAsync(UserDTO user);
+        Task<UserDTO> CreateUserAsync(NewUserDTO newUser);
+        Task<UserDTO> UpdateUserAsync(NewUserDTO user);
         Task DeleteUserAsync(Guid userId);
 
         Task UpdatePermissionsAsync(Guid id, string[] permissions);

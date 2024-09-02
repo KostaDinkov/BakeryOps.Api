@@ -5,14 +5,20 @@ using BakeryOps.API.Security;
 using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace BakeryOps.API.Controllers;
+
+ 
 
 [ApiController]
 [Route("api/[controller]/[action]")]
 public class UsersController(IUsersService usersService) : Controller
 {
+    private const string UsersRead = "users.read";
+    private const string UsersWrite = "users.write";
+    
     [HttpGet]
-    [Permission("users.read")]
+    [Permission(UsersRead)]
     public async Task<IActionResult> GetUsers()
     {
         var users = await usersService.GetUsersAsync();
@@ -20,7 +26,7 @@ public class UsersController(IUsersService usersService) : Controller
     }
 
     [HttpGet("{userName}")]
-    public async Task<IActionResult> GetUser(string userName)
+    public async Task<IActionResult> GetUserByUsername(string userName)
     {
         var user = await usersService.GetUserByNameAsync(userName);
         if (user == null)
@@ -30,17 +36,28 @@ public class UsersController(IUsersService usersService) : Controller
         return Ok(user);
     }
 
-    [HttpPost]
-    [Permission("users.create")]
-    public async Task<IActionResult> AddUser(UserCredentialsDTO credentials)
+    [HttpGet("{userId}")]
+    public async Task<IActionResult> GetUserById(Guid userId)
     {
-        var user = await usersService.CreateUserAsync(credentials.UserName, credentials.Password);
+        var user = await usersService.GetUserByIdAsync(userId);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        return Ok(user);
+    }
+
+    [HttpPost]
+    [Permission(UsersWrite)]
+    public async Task<IActionResult> AddUser(NewUserDTO newUser)
+    {
+        var user = await usersService.CreateUserAsync(newUser);
         return Ok(user);
     }
 
     [HttpPut]
-    [Permission("users.create")]
-    public async Task<IActionResult> UpdateUser( UserDTO update)
+    [Permission(UsersWrite)]
+    public async Task<IActionResult> UpdateUser( NewUserDTO update)
     {
         try
         {
@@ -56,7 +73,7 @@ public class UsersController(IUsersService usersService) : Controller
             return BadRequest(e.Message);
         }
     }
-    [Permission("users.delete")]
+    [Permission(UsersWrite)]
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteUser(Guid id)
     {
