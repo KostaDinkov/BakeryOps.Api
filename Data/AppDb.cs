@@ -10,12 +10,13 @@ namespace BakeryOps.API.Data
         public DbSet<Product> Products { get; set; } = null!;
         public DbSet<Order> Orders { get; set; } = null!;
         public DbSet<OrderItem> OrderItems { get; set; } = null!;
-        public virtual DbSet<Client> Clients { get; set; } = null!;
+        public  DbSet<Client> Clients { get; set; } = null!;
 
-        public virtual DbSet<Delivery> Deliveries { get; set; } = null!;
-        public virtual DbSet<DeliveryItem> DeliveryItems { get; set; } = null!;
-        public virtual DbSet<Material> Materials { get; set; } = null!;
-        public virtual DbSet<Vendor> Vendors { get; set; } = null!;
+        public DbSet<Delivery> Deliveries { get; set; } = null!;
+        public DbSet<DeliveryItem> DeliveryItems { get; set; } = null!;
+        public DbSet<Material> Materials { get; set; } = null!;
+        public DbSet<Vendor> Vendors { get; set; } = null!;
+        public DbSet<Category> Categories { get; set; } = null!;
 
 
         public DbSet<Permission> Permissions { get; set; } = null!;
@@ -27,6 +28,15 @@ namespace BakeryOps.API.Data
         {
             modelBuilder.Entity<Order>().Navigation(e => e.OrderItems).AutoInclude();
             modelBuilder.Entity<OrderItem>().Navigation(item => item.Product).AutoInclude();
+
+            modelBuilder.Entity<Material>(e =>
+            {
+                e.Property(c => c.CategoryId)
+                    .IsRequired();
+                e.HasOne<Category>()
+                    .WithMany()
+                    .HasForeignKey(c => c.CategoryId);
+            });
         }
 
     }
