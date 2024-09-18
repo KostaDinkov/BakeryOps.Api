@@ -34,8 +34,8 @@ namespace BakeryOps.API.Services
             {
                 throw new InvalidOperationException();
             }
-            dbContext.Remove(client);
-            dbContext.SaveChanges();
+            dbContext.Clients.Remove(client);
+            await dbContext.SaveChangesAsync();
             return client;
         }
 
@@ -53,15 +53,15 @@ namespace BakeryOps.API.Services
             return client;
         }
 
-        public async Task<Client> UpdateClient(int id, ClientDTO update)
+        public async Task<Client> UpdateClient( ClientDTO update)
         {
-            var client = await dbContext.Clients.FindAsync(id);
+            var client = await dbContext.Clients.FindAsync(update.Id);
             if(client is null)
             {
-                throw new InvalidOperationException();
+                throw new InvalidOperationException($"Client {update.Name} not found");
             }
             mapper.Map(update, client);
-            dbContext.SaveChanges();
+            await dbContext.SaveChangesAsync();
             return client;
         }
     }

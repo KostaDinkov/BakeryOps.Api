@@ -8,64 +8,71 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Services
 {
-    public class MaterialsService(AppDb dbContext, IMapper mapper) : IMaterialsService
+    public class MaterialsService(AppDb appDb, IMapper mapper) : IMaterialsService
     {
-        public async Task<Material[]> GetMaterialsAsync()
+        public async Task<MaterialDTO[]> GetMaterialsAsync()
         {
-            return await dbContext.Materials.ToArrayAsync();
+            var materials = await appDb.Materials.Include(m => m.Category).Include(m => m.Vendor).ToArrayAsync();
+            //convert from Material array to MaterialDTO array
+            var materialsDTO = materials.Select(m => mapper.Map<MaterialDTO>(m)).ToArray();
+            return materialsDTO;
         }
 
-        public async Task<Material?> GetMaterialByIdAsync(Guid materialId)
+        public async Task<MaterialDTO?> GetMaterialByIdAsync(Guid materialId)
         {
-           return await dbContext.Materials.FindAsync(materialId);
+            var material = await appDb.Materials.FindAsync(materialId);
+            return mapper.Map<Material, MaterialDTO>(material);
         }
 
-        public async Task<Material> CreateMaterialAsync(Material newMaterial)
+        public async Task<MaterialDTO> CreateMaterialAsync(MaterialDTO newMaterial)
         {
             var result = new Material
             {
                 Name = newMaterial.Name,
                 Description = newMaterial.Description,
                 Unit = newMaterial.Unit,
-                
+                CategoryId = newMaterial.CategoryId,
+                Category = appDb.Categories.FirstOrDefault(c=>c.Id == newMaterial.CategoryId),
+                VendorId = newMaterial.VendorId,
+                Vendor = appDb.Vendors.FirstOrDefault(v=>v.Id == newMaterial.VendorId)
             };
+            
 
-            dbContext.Materials.Add(result);
-            await dbContext.SaveChangesAsync();
-            return result;
+            appDb.Materials.Add(result);
+            await appDb.SaveChangesAsync();
+            return mapper.Map<MaterialDTO>(result);
         }
 
-        public async Task<Material> UpdateMaterialAsync(Material update)
+        public async Task<MaterialDTO> UpdateMaterialAsync(MaterialDTO update)
         {
-            var material = await dbContext.Materials.FindAsync(update.Id);
-            if(material == null)
-            {
-                throw new DbServiceException($"Material {update.Id} not found");
-            }
-           
-
-           
-            
-
+            var material = await appDb.Materials.FindAsync(update.Id);
             if(material == null)
             {
                 throw new DbServiceException($"Material {update.Id} not found");
             }
             
-            dbContext.Materials.Update(material);
-            await dbContext.SaveChangesAsync();
-            return material;
+            material.Name = update.Name;
+            material.Description = update.Description;
+            material.Unit = update.Unit;
+            material.CategoryId = update.CategoryId;
+            material.Category = appDb.Categories.FirstOrDefault(c=>c.Id == update.CategoryId);
+            material.VendorId = update.VendorId;
+            material.Vendor = appDb.Vendors.FirstOrDefault(v=>v.Id == update.VendorId);
+
+            appDb.Materials.Update(material);
+            await appDb.SaveChangesAsync();
+            return mapper.Map<MaterialDTO>(material); ;
         }
 
         public async Task DeleteMaterialAsync(Guid materialId)
         {
-            var material = await dbContext.Materials.FindAsync(materialId);
+            var material = await appDb.Materials.FindAsync(materialId);
             if(material == null)
             {
                 throw new DbServiceException($"Material {materialId} not found");
             }
-            dbContext.Materials.Remove(material);
-            await dbContext.SaveChangesAsync();
+            appDb.Materials.Remove(material);
+            await appDb.SaveChangesAsync();
         }
     }
 }

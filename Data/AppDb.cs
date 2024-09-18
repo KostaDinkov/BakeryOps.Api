@@ -29,14 +29,7 @@ namespace BakeryOps.API.Data
             modelBuilder.Entity<Order>().Navigation(e => e.OrderItems).AutoInclude();
             modelBuilder.Entity<OrderItem>().Navigation(item => item.Product).AutoInclude();
 
-            modelBuilder.Entity<Material>(e =>
-            {
-                e.Property(c => c.CategoryId)
-                    .IsRequired();
-                e.HasOne<Category>()
-                    .WithMany()
-                    .HasForeignKey(c => c.CategoryId);
-            });
+           
         }
 
     }

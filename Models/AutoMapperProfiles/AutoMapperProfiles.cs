@@ -13,8 +13,26 @@ namespace BakeryOps.API.Models.AutoMapperProfiles
             CreateMap<User, UserDTO>().ForMember(dest => dest.Permissions,
                 opt =>
                     opt.MapFrom(src => src.Permissions.Select(p => p.Name).ToArray())).ReverseMap();
+            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Vendor, VendorDTO>().ReverseMap();
             
-            
+            CreateMap<Material, MaterialDTO>()
+                .ForMember(dest=> dest.CategoryId, opt =>
+                {
+                    opt.MapFrom(src=>src.Category.Id);
+                })
+                .ForMember(dest => dest.VendorId, opt =>
+                {
+                    opt.MapFrom(src => src.Vendor.Id);
+                })
+                .ReverseMap()
+                .ForPath(dest => dest.CategoryId, 
+                    opt => opt.MapFrom(src => src.CategoryId))
+                .ForPath(dest=>dest.VendorId, 
+                    opt=>opt.MapFrom(src=>src.VendorId));
+
+
+
         }
     }
 }

@@ -67,6 +67,8 @@ namespace BakeryOps.API.StartUp
             builder.Services.AddScoped<IClientsService, ClientsService>();
             builder.Services.AddScoped<IUsersService, UserService>();
             builder.Services.AddScoped<IMaterialsService, MaterialsService>();
+            builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+            builder.Services.AddScoped<IVendorsService, VendorsService>();
 
             builder.Services.AddAuthentication(options =>
             {

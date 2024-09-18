@@ -9,7 +9,7 @@ public static class SwaggerConfig
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orders API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.yaml", "Orders API V1");
             });
         }
         

@@ -11,6 +11,8 @@ namespace BakeryOps.API.Models
         public required string Unit { get; set; }
         
         public  Guid CategoryId { get; set; }
+        public Category Category { get; set; }
         public Guid? VendorId { get; set; }
+        public Vendor Vendor { get; set; }
     }
 }

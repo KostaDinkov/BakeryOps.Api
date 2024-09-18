@@ -402,15 +402,19 @@ namespace Orders.API.Migrations
 
             modelBuilder.Entity("BakeryOps.API.Models.Material", b =>
                 {
-                    b.HasOne("BakeryOps.API.Models.Category", null)
-                        .WithMany()
+                    b.HasOne("BakeryOps.API.Models.Category", "Category")
+                        .WithMany("Materials")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BakeryOps.API.Models.Vendor", null)
+                    b.HasOne("BakeryOps.API.Models.Vendor", "Vendor")
                         .WithMany("Materials")
                         .HasForeignKey("VendorId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
@@ -448,6 +452,11 @@ namespace Orders.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BakeryOps.API.Models.Category", b =>
+                {
+                    b.Navigation("Materials");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Client", b =>

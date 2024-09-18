@@ -12,6 +12,6 @@ namespace BakeryOps.API.Services
         Task<Client> DeleteClient(int id);
         
         
-        Task<Client> UpdateClient(int id, ClientDTO update);
+        Task<Client> UpdateClient(ClientDTO update);
     }
 }

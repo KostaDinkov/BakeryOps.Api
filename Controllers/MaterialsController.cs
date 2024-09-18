@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BakeryOps.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class MaterialsController(IMaterialsService materialsService) : Controller
@@ -31,14 +31,14 @@ namespace BakeryOps.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddMaterial(Material newMaterial)
+        public async Task<IActionResult> AddMaterial(MaterialDTO newMaterial)
         {
             var material = await materialsService.CreateMaterialAsync(newMaterial);
-            return Ok(material);
+            return Created("",material);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMaterial(Guid id, Material material)
+        [HttpPut]
+        public async Task<IActionResult> UpdateMaterial(MaterialDTO material)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace BakeryOps.API.Controllers
             try
             {
                 await materialsService.DeleteMaterialAsync(id);
-                return Ok();
+                return NoContent();
             }
             catch (DbServiceException e)
             {

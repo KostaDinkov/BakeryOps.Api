@@ -48,9 +48,9 @@ namespace BakeryOps.API.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> EditClient(int id, ClientDTO update)
+        public async Task<IActionResult> EditClient( ClientDTO update)
         {
-            var clientId = await clientsService.UpdateClient(id, update);
+            var clientId = await clientsService.UpdateClient(update);
             return Ok(clientId);
         }
     }
