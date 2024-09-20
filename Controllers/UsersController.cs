@@ -12,7 +12,7 @@ namespace BakeryOps.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]/[action]")]
-public class UsersController(IUsersService usersService) : Controller
+public class UsersController(ICrudService<UserDTO> usersService) : Controller
 {
     private const string UsersRead = "users.read";
     private const string UsersWrite = "users.write";
@@ -21,14 +21,14 @@ public class UsersController(IUsersService usersService) : Controller
     [Permission(UsersRead)]
     public async Task<IActionResult> GetUsers()
     {
-        var users = await usersService.GetUsersAsync();
+        var users = await usersService.GetAll();
         return Ok(users);
     }
 
     [HttpGet("{userName}")]
     public async Task<IActionResult> GetUserByUsername(string userName)
     {
-        var user = await usersService.GetUserByNameAsync(userName);
+        var user = await (usersService as IGetByName<UserDTO>).GetByName(userName);
         if (user == null)
         {
             return NotFound();
@@ -39,7 +39,7 @@ public class UsersController(IUsersService usersService) : Controller
     [HttpGet("{userId}")]
     public async Task<IActionResult> GetUserById(Guid userId)
     {
-        var user = await usersService.GetUserByIdAsync(userId);
+        var user = await usersService.GetById(userId);
         if (user == null)
         {
             return NotFound();
@@ -51,7 +51,7 @@ public class UsersController(IUsersService usersService) : Controller
     [Permission(UsersWrite)]
     public async Task<IActionResult> AddUser(NewUserDTO newUser)
     {
-        var user = await usersService.CreateUserAsync(newUser);
+        var user = await usersService.Create(newUser);
         return Ok(user);
     }
 
@@ -61,7 +61,7 @@ public class UsersController(IUsersService usersService) : Controller
     {
         try
         {
-            var user = await usersService.UpdateUserAsync(update);
+            var user = await usersService.Update(update);
             if (user == null)
             {
                 return NotFound();
@@ -79,7 +79,7 @@ public class UsersController(IUsersService usersService) : Controller
     {
         try
         {
-            await usersService.DeleteUserAsync(id);
+            await usersService.Delete(id);
         }
         catch (DbServiceException e)
         {

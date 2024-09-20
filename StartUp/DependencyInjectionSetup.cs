@@ -65,11 +65,11 @@ namespace BakeryOps.API.StartUp
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddScoped<IOrdersService, OrdersService>();
-            builder.Services.AddScoped<IClientsService, ClientsService>();
-            builder.Services.AddScoped<IUsersService, UserService>();
-            builder.Services.AddScoped<IMaterialsService, MaterialsService>();
+            builder.Services.AddScoped<ICrudService<ClientDTO>, ClientsService>();
+            builder.Services.AddScoped<ICrudService<UserDTO>, UserService>();
+            builder.Services.AddScoped<ICrudService<MaterialDTO>, MaterialsService>();
             builder.Services.AddScoped<ICrudService<CategoryDTO>, CategoriesService>();
-            builder.Services.AddScoped<IVendorsService, VendorsService>();
+            builder.Services.AddScoped<ICrudService<VendorDTO>, VendorsService>();
 
             builder.Services.AddAuthentication(options =>
             {

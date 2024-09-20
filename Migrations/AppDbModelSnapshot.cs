@@ -4,19 +4,16 @@ using BakeryOps.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Orders.API.Migrations
+namespace BakeryOps.API.Migrations
 {
     [DbContext(typeof(AppDb))]
-    [Migration("20240903114927_AddMaterialCategory")]
-    partial class AddMaterialCategory
+    partial class AppDbModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,6 +28,9 @@ namespace Orders.API.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -42,11 +42,9 @@ namespace Orders.API.Migrations
 
             modelBuilder.Entity("BakeryOps.API.Models.Client", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("DiscountPercent")
                         .HasColumnType("int");
@@ -54,7 +52,13 @@ namespace Orders.API.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsCompany")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsSpecialPrice")
@@ -148,6 +152,12 @@ namespace Orders.API.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -182,6 +192,9 @@ namespace Orders.API.Migrations
                     b.Property<int?>("ClientId")
                         .HasColumnType("int");
 
+                    b.Property<Guid?>("ClientId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("ClientName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -207,7 +220,7 @@ namespace Orders.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("ClientId1");
 
                     b.ToTable("Orders");
                 });
@@ -361,6 +374,12 @@ namespace Orders.API.Migrations
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -405,22 +424,26 @@ namespace Orders.API.Migrations
 
             modelBuilder.Entity("BakeryOps.API.Models.Material", b =>
                 {
-                    b.HasOne("BakeryOps.API.Models.Category", null)
-                        .WithMany()
+                    b.HasOne("BakeryOps.API.Models.Category", "Category")
+                        .WithMany("Materials")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BakeryOps.API.Models.Vendor", null)
+                    b.HasOne("BakeryOps.API.Models.Vendor", "Vendor")
                         .WithMany("Materials")
                         .HasForeignKey("VendorId");
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Vendor");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
                 {
                     b.HasOne("BakeryOps.API.Models.Client", "Client")
                         .WithMany("Orders")
-                        .HasForeignKey("ClientId");
+                        .HasForeignKey("ClientId1");
 
                     b.Navigation("Client");
                 });
@@ -451,6 +474,11 @@ namespace Orders.API.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("BakeryOps.API.Models.Category", b =>
+                {
+                    b.Navigation("Materials");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.Client", b =>

@@ -8,6 +8,11 @@
         Task<List<T>> GetAll();
         Task<T?> Update(T entity);
         Task<bool> Delete(Guid id);
-        Task<bool> Delete(int id);
+        
+    }
+
+    public interface IGetByName<T> where T : class
+    {
+        Task<T?> GetByName(string name);
     }
 }

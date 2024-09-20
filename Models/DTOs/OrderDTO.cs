@@ -16,7 +16,7 @@ namespace BakeryOps.API.Models.DTOs
         
         public string? ClientName { get; set; }
         public string? ClientPhone { get; set; }
-        public int? ClientId { get; set; }
+        public Guid? ClientId { get; set; }
 
         public bool? IsPaid { get; set; }
 

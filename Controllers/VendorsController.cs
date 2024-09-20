@@ -10,19 +10,19 @@ namespace BakeryOps.API.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class VendorsController(IVendorsService vendorsService) : Controller
+    public class VendorsController(ICrudService<VendorDTO> vendorsService) : Controller
     {
         [HttpGet]
         public async Task<IActionResult> GetVendors()
         {
-            var vendors = await vendorsService.GetVendors();
+            var vendors = await vendorsService.GetAll();
             return Ok(vendors);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetVendor(Guid id)
         {
-            var vendor = await vendorsService.GetVendor(id);
+            var vendor = await vendorsService.GetById(id);
             if (vendor == null)
             {
                 return NotFound();
@@ -34,14 +34,14 @@ namespace BakeryOps.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddVendor(VendorDTO newVendor)
         {
-            var vendor = await vendorsService.CreateVendor(newVendor);
+            var vendor = await vendorsService.Create(newVendor);
             return Ok(vendor);
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateVendor(VendorDTO update)
         {
-            var vendor = await vendorsService.UpdateVendor(update);
+            var vendor = await vendorsService.Update(update);
             if (vendor == null)
             {
                 return NotFound();
@@ -54,7 +54,7 @@ namespace BakeryOps.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVendor(Guid id)
         {
-            if (await vendorsService.DeleteVendor(id))
+            if (await vendorsService.Delete(id))
             {
                 return Ok();
             }

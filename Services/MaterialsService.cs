@@ -8,19 +8,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Services
 {
-    public class MaterialsService(AppDb appDb, IMapper mapper) : IMaterialsService
+    public class MaterialsService(AppDb appDb, IMapper mapper) : ICrudService<MaterialDTO>
     {
-        public async Task<MaterialDTO[]> GetMaterialsAsync()
+        public async Task<List<MaterialDTO>> GetAll()
         {
             //return all materials that are not deleted
             var materials = await appDb.Materials.Include(m => m.Category).Include(m => m.Vendor).Where(m=>m.IsDeleted != true).ToArrayAsync();
             
             //convert from Material array to MaterialDTO array
-            return materials.Select(mapper.Map<MaterialDTO>).ToArray();
+            return materials.Select(mapper.Map<MaterialDTO>).ToList();
             
         }
 
-        public async Task<MaterialDTO?> GetMaterialByIdAsync(Guid materialId)
+        public async Task<MaterialDTO?> GetById(Guid materialId)
         {
             var material = await appDb.Materials.FindAsync(materialId);
             if (material == null || material.IsDeleted)
@@ -31,7 +31,7 @@ namespace BakeryOps.API.Services
             return mapper.Map<Material, MaterialDTO>(material);
         }
 
-        public async Task<MaterialDTO> CreateMaterialAsync(MaterialDTO newMaterial)
+        public async Task<MaterialDTO?> Create(MaterialDTO newMaterial)
         {
             var result = new Material
             {
@@ -50,12 +50,12 @@ namespace BakeryOps.API.Services
             return mapper.Map<MaterialDTO>(result);
         }
 
-        public async Task<MaterialDTO> UpdateMaterialAsync(MaterialDTO update)
+        public async Task<MaterialDTO?> Update(MaterialDTO update)
         {
             var material = await appDb.Materials.FindAsync(update.Id);
             if(material == null)
             {
-                throw new DbServiceException($"Material {update.Id} not found");
+                return null;
             }
             
             material.Name = update.Name;
@@ -71,7 +71,7 @@ namespace BakeryOps.API.Services
             return mapper.Map<MaterialDTO>(material); ;
         }
 
-        public async Task<bool> DeleteMaterialAsync(Guid materialId)
+        public async Task<bool> Delete(Guid materialId)
         {
             var material = await appDb.Materials.FindAsync(materialId);
             if(material == null)

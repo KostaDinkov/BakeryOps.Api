@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Services
 {
-    public class VendorsService(AppDb appDb, IMapper mapper) : IVendorsService
+    public class VendorsService(AppDb appDb, IMapper mapper) : ICrudService<VendorDTO>
     {
 
-        public async Task<VendorDTO> CreateVendor(VendorDTO vendor)
+        public async Task<VendorDTO?> Create(VendorDTO vendor)
 
         {
             var v = mapper.Map<VendorDTO, Vendor>(vendor);
@@ -19,23 +19,19 @@ namespace BakeryOps.API.Services
         }
 
 
-        public async Task<VendorDTO> GetVendor(Guid id)
+        public async Task<VendorDTO?> GetById(Guid id)
         {
             var vendor = await appDb.Vendors.FindAsync(id);
-            if (vendor == null)
-            {
-                throw new Exception("Vendor not found");
-            }
-            return mapper.Map<VendorDTO>(vendor);
+            return vendor == null ? null : mapper.Map<VendorDTO>(vendor);
         }
 
-        public async Task<List<VendorDTO>> GetVendors()
+        public async Task<List<VendorDTO>> GetAll()
         {
             var vendors = await appDb.Vendors.Where(v=>v.IsDeleted != true).ToListAsync();
             return vendors.Select(mapper.Map<VendorDTO>).ToList();
         }
 
-        public async Task<VendorDTO?> UpdateVendor(VendorDTO vendor)
+        public async Task<VendorDTO?> Update(VendorDTO vendor)
         {
             var existingVendor = await appDb.Vendors.FindAsync(vendor.Id);
             
@@ -48,7 +44,7 @@ namespace BakeryOps.API.Services
             return mapper.Map<VendorDTO>(existingVendor);
         }
 
-        public async Task<bool> DeleteVendor(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             var vendor = await appDb.Vendors.Include(v=>v.Materials).FirstOrDefaultAsync(v=>v.Id == id);
             if (vendor == null)

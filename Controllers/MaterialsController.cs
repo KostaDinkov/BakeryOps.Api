@@ -10,19 +10,19 @@ namespace BakeryOps.API.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class MaterialsController(IMaterialsService materialsService) : Controller
+    public class MaterialsController(ICrudService<MaterialDTO> materialsService) : Controller
     {
         [HttpGet]
         public async Task<IActionResult> GetMaterials()
         {
-            var materials = await materialsService.GetMaterialsAsync();
+            var materials = await materialsService.GetAll();
             return Ok(materials);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetMaterial(Guid id)
         {
-            var material = await materialsService.GetMaterialByIdAsync(id);
+            var material = await materialsService.GetById(id);
             if (material == null)
             {
                 return NotFound();
@@ -33,7 +33,7 @@ namespace BakeryOps.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMaterial(MaterialDTO newMaterial)
         {
-            var material = await materialsService.CreateMaterialAsync(newMaterial);
+            var material = await materialsService.Create(newMaterial);
             return Created("",material);
         }
 
@@ -42,7 +42,7 @@ namespace BakeryOps.API.Controllers
         {
             try
             {
-                var updatedMaterial = await materialsService.UpdateMaterialAsync(material);
+                var updatedMaterial = await materialsService.Update(material);
                 if (updatedMaterial == null)
                 {
                     return BadRequest();
@@ -58,7 +58,7 @@ namespace BakeryOps.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMaterial(Guid id)
         {
-            if (await materialsService.DeleteMaterialAsync(id))
+            if (await materialsService.Delete(id))
             {
                 return NoContent();
             }
