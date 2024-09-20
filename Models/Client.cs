@@ -13,6 +13,8 @@ namespace BakeryOps.API.Models
         public bool IsCompany { get; set; } = false;
         public bool IsSpecialPrice { get; set; } = false;
         public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+        public bool IsDeleted { get; set; } = false;
+        public bool IsActive { get; set; } = true;
         
     }
 }

@@ -8,6 +8,6 @@ public interface IMaterialsService
     Task<MaterialDTO?> GetMaterialByIdAsync(Guid materialId);
     Task<MaterialDTO> CreateMaterialAsync(MaterialDTO MaterialDTO);
     Task<MaterialDTO> UpdateMaterialAsync(MaterialDTO update);
-    Task DeleteMaterialAsync(Guid materialId);
+    Task<bool> DeleteMaterialAsync(Guid materialId);
 }
 

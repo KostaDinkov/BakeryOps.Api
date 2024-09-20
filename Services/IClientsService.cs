@@ -8,10 +8,10 @@ namespace BakeryOps.API.Services
 
         Task<Client> GetClientById(int id);
         Task<List<ClientDTO>> GetAllClients();
-        Task<Client> AddClient(ClientDTO client);
-        Task<Client> DeleteClient(int id);
+        Task<ClientDTO?> AddClient(ClientDTO client);
+        Task<bool> DeleteClient(int id);
         
         
-        Task<Client> UpdateClient(ClientDTO update);
+        Task<ClientDTO?> UpdateClient(ClientDTO update);
     }
 }

@@ -8,7 +8,7 @@ namespace BakeryOps.API.Services
         public Task<VendorDTO> CreateVendor(VendorDTO vendor);
         public Task<VendorDTO> GetVendor(Guid id);
         public Task<List<VendorDTO>> GetVendors();
-        public Task<VendorDTO> UpdateVendor( VendorDTO vendor);
-        public Task DeleteVendor(Guid id);
+        public Task<VendorDTO?> UpdateVendor( VendorDTO vendor);
+        public Task<bool> DeleteVendor(Guid id);
     }
 }

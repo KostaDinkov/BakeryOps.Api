@@ -9,7 +9,6 @@ namespace BakeryOps.API.Services
     public class VendorsService(AppDb appDb, IMapper mapper) : IVendorsService
     {
 
-
         public async Task<VendorDTO> CreateVendor(VendorDTO vendor)
 
         {
@@ -18,7 +17,6 @@ namespace BakeryOps.API.Services
             await appDb.SaveChangesAsync();
             return vendor;
         }
-
 
 
         public async Task<VendorDTO> GetVendor(Guid id)
@@ -33,31 +31,41 @@ namespace BakeryOps.API.Services
 
         public async Task<List<VendorDTO>> GetVendors()
         {
-            var vendors = await appDb.Vendors.ToListAsync();
+            var vendors = await appDb.Vendors.Where(v=>v.IsDeleted != true).ToListAsync();
             return vendors.Select(mapper.Map<VendorDTO>).ToList();
         }
 
-        public async Task<VendorDTO> UpdateVendor(VendorDTO vendor)
+        public async Task<VendorDTO?> UpdateVendor(VendorDTO vendor)
         {
             var existingVendor = await appDb.Vendors.FindAsync(vendor.Id);
+            
             if (existingVendor == null)
             {
-                throw new Exception("Vendor not found");
+                return null;
             }
-            existingVendor.Name = vendor.Name;
+            appDb.Entry(existingVendor).CurrentValues.SetValues(vendor);
             await appDb.SaveChangesAsync();
             return mapper.Map<VendorDTO>(existingVendor);
         }
 
-        public async Task DeleteVendor(Guid id)
+        public async Task<bool> DeleteVendor(Guid id)
         {
-            var vendor = await appDb.Vendors.FindAsync(id);
+            var vendor = await appDb.Vendors.Include(v=>v.Materials).FirstOrDefaultAsync(v=>v.Id == id);
             if (vendor == null)
             {
-                throw new Exception("Vendor not found");
+                return false;
+
             }
-            appDb.Vendors.Remove(vendor);
+            if(vendor.Materials.Any())
+            {
+                vendor.IsDeleted = true;
+            }
+            else
+            {
+                appDb.Vendors.Remove(vendor);
+            }
             await appDb.SaveChangesAsync();
+            return true;
         }
     }
 }

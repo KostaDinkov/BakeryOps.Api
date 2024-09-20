@@ -6,63 +6,68 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Services
 {
-    public class ClientsService : IClientsService
+    public class ClientsService(AppDb dbContext, IMapper mapper, ILogger<ClientsService> logger)
+        : IClientsService
     {
-        private readonly AppDb dbContext;
-        private readonly IMapper mapper;
-        private ILogger logger;
+        private ILogger logger = logger;
 
-        public ClientsService(AppDb dbContext, IMapper mapper, ILogger<ClientsService> logger)
-        {
-            this.dbContext = dbContext;
-            this.mapper = mapper;
-            this.logger = logger;
-        }
-
-        public async Task<Client> AddClient(ClientDTO newClient)
+        public async Task<ClientDTO?> AddClient(ClientDTO newClient)
         {
             var client = mapper.Map<Client>(newClient);
             await dbContext.Clients.AddAsync(client);
             await dbContext.SaveChangesAsync();
-            return client;
+            
+            return mapper.Map<ClientDTO>(client);
         }
 
-        public async Task<Client> DeleteClient(int id)
+        public async Task<bool> DeleteClient(int id)
         {
-            var client = await dbContext.Clients.FindAsync(id);
+            var client = await dbContext.Clients.Include(c => c.Orders).Where(c => c.IsDeleted != true)
+                .FirstOrDefaultAsync(c => c.Id == id);
             if (client is null)
             {
-                throw new InvalidOperationException();
+                return false;
             }
-            dbContext.Clients.Remove(client);
+
+            if (client.Orders.Any())
+            {
+                client.IsDeleted = true;
+            }
+            else
+            {
+                dbContext.Clients.Remove(client);
+            }
+
             await dbContext.SaveChangesAsync();
-            return client;
+            return true;
         }
 
         public async Task<List<ClientDTO>> GetAllClients()
         {
-            var clients = await dbContext.Clients.ToListAsync();
-            var clientDtos = clients.Select(c => mapper.Map<ClientDTO>(c)).ToList();
-            logger.Log(LogLevel.Information, "Clients Requested");
+            var clients = await dbContext.Clients.Where(c=>c.IsDeleted!= true).ToListAsync();
+            var clientDtos = clients.Select( mapper.Map<ClientDTO>).ToList();
+            
             return clientDtos;
         }
 
         public async Task<Client> GetClientById(int id)
         {
             var client = await dbContext.Clients.FindAsync(id);
+
             return client;
         }
 
-        public async Task<Client> UpdateClient( ClientDTO update)
+        public async Task<ClientDTO?> UpdateClient(ClientDTO update)
         {
             var client = await dbContext.Clients.FindAsync(update.Id);
-            if(client is null)
+            if (client is null)
             {
-                throw new InvalidOperationException($"Client {update.Name} not found");
+                return null;
             }
+
             mapper.Map(update, client);
             await dbContext.SaveChangesAsync();
-            return client;
+            return update;
         }
     }
 }

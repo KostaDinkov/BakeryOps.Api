@@ -37,15 +37,15 @@ namespace BakeryOps.API.Controllers
             return Ok(category);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCategory(Guid id, CategoryDTO category)
+        [HttpPut]
+        public async Task<IActionResult> UpdateCategory( CategoryDTO category)
         {
             try
             {
-                var updatedCategory = await categoriesService.UpdateCategory(id, category);
+                var updatedCategory = await categoriesService.UpdateCategory( category);
                 if (updatedCategory == null)
                 {
-                    return BadRequest();
+                    return NotFound();
                 }
                 return Ok(updatedCategory);
             }

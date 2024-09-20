@@ -10,4 +10,7 @@ public class Vendor
     public string? Description { get; set; }
 
     public ICollection<Material> Materials { get; set; } = new List<Material>();
+
+    public bool IsDeleted { get; set; } = false;
+    public bool IsActive { get; set; } = true;
 }

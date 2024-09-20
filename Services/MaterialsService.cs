@@ -12,15 +12,22 @@ namespace BakeryOps.API.Services
     {
         public async Task<MaterialDTO[]> GetMaterialsAsync()
         {
-            var materials = await appDb.Materials.Include(m => m.Category).Include(m => m.Vendor).ToArrayAsync();
+            //return all materials that are not deleted
+            var materials = await appDb.Materials.Include(m => m.Category).Include(m => m.Vendor).Where(m=>m.IsDeleted != true).ToArrayAsync();
+            
             //convert from Material array to MaterialDTO array
-            var materialsDTO = materials.Select(m => mapper.Map<MaterialDTO>(m)).ToArray();
-            return materialsDTO;
+            return materials.Select(mapper.Map<MaterialDTO>).ToArray();
+            
         }
 
         public async Task<MaterialDTO?> GetMaterialByIdAsync(Guid materialId)
         {
             var material = await appDb.Materials.FindAsync(materialId);
+            if (material == null || material.IsDeleted)
+            {
+                return null;
+
+            }
             return mapper.Map<Material, MaterialDTO>(material);
         }
 
@@ -64,15 +71,18 @@ namespace BakeryOps.API.Services
             return mapper.Map<MaterialDTO>(material); ;
         }
 
-        public async Task DeleteMaterialAsync(Guid materialId)
+        public async Task<bool> DeleteMaterialAsync(Guid materialId)
         {
             var material = await appDb.Materials.FindAsync(materialId);
             if(material == null)
             {
-                throw new DbServiceException($"Material {materialId} not found");
+                return false;
             }
-            appDb.Materials.Remove(material);
+            material.IsDeleted = true;
+
             await appDb.SaveChangesAsync();
-        }
+            await appDb.SaveChangesAsync();
+            
+            return true; }
     }
 }

@@ -18,6 +18,7 @@ namespace BakeryOps.API.Controllers
             var vendors = await vendorsService.GetVendors();
             return Ok(vendors);
         }
+
         [HttpGet]
         public async Task<IActionResult> GetVendor(Guid id)
         {
@@ -26,47 +27,41 @@ namespace BakeryOps.API.Controllers
             {
                 return NotFound();
             }
+
             return Ok(vendor);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddVendor(VendorDTO newVendor)
         {
             var vendor = await vendorsService.CreateVendor(newVendor);
             return Ok(vendor);
         }
-        
+
         [HttpPut]
-        public async Task<IActionResult> UpdateVendor( VendorDTO update)
+        public async Task<IActionResult> UpdateVendor(VendorDTO update)
         {
-            try
+            var vendor = await vendorsService.UpdateVendor(update);
+            if (vendor == null)
             {
-                
-                var vendor = await vendorsService.UpdateVendor(update);
-                if (vendor == null)
-                {
-                    return BadRequest();
-                }
-                return Ok(vendor);
+                return NotFound();
             }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
+
+
+            return Ok(vendor);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteVendor(Guid id)
         {
-            try
+            if (await vendorsService.DeleteVendor(id))
             {
-                await vendorsService.DeleteVendor(id);
                 return Ok();
             }
-            catch (DbServiceException e)
+            else
             {
-                return BadRequest(e.Message);
+                return NotFound();
             }
         }
-
     }
 }

@@ -5,10 +5,10 @@ namespace BakeryOps.API.Services
 {
     public interface ICategoriesService
     {
-        public Task<Category> CreateCategory(CategoryDTO category);
-        public Task<Category> GetCategory(Guid id);
-        public Task<List<Category>> GetCategories();
-        public Task<Category> UpdateCategory(Guid id, CategoryDTO category);
-        public Task DeleteCategory(Guid id);
+        public Task<CategoryDTO> CreateCategory(CategoryDTO category);
+        public Task<CategoryDTO?> GetCategory(Guid id);
+        public Task<List<CategoryDTO>> GetCategories();
+        public Task<CategoryDTO?> UpdateCategory( CategoryDTO category);
+        public Task<bool> DeleteCategory(Guid id);
     }
 }

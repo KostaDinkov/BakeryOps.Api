@@ -14,5 +14,9 @@ namespace BakeryOps.API.Models
         public Category Category { get; set; }
         public Guid? VendorId { get; set; }
         public Vendor Vendor { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
+
+        public bool IsActive { get; set; } = true;
     }
 }

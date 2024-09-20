@@ -6,5 +6,7 @@
         public required string Name { get; set; }
 
         public ICollection<Material> Materials { get; set; } = new List<Material>();
+
+        public bool IsDeleted { get; set; } = false;
     }
 }

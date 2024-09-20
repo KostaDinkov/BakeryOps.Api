@@ -58,17 +58,12 @@ namespace BakeryOps.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMaterial(Guid id)
         {
-            try
+            if (await materialsService.DeleteMaterialAsync(id))
             {
-                await materialsService.DeleteMaterialAsync(id);
                 return NoContent();
             }
-            catch (DbServiceException e)
-            {
-                return BadRequest(e.Message);
-            }
+
+            return NotFound();
         }
-        
-        
     }
 }
