@@ -9,20 +9,20 @@ namespace BakeryOps.API.Controllers
     [Route("api/[controller]/[action]")]
     [ApiController]
     [Authorize]
-    public class CategoriesController(ICategoriesService categoriesService) : Controller
+    public class CategoriesController(ICrudService<CategoryDTO> categoriesService) : Controller
     {
 
         [HttpGet]
         public async Task<IActionResult> GetCategories()
         {
-            var categories = await categoriesService.GetCategories();
+            var categories = await categoriesService.GetAll();
             return Ok(categories);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetCategory(Guid id)
         {
-            var category = await categoriesService.GetCategory(id);
+            var category = await categoriesService.GetById(id);
             if (category == null)
             {
                 return NotFound();
@@ -33,7 +33,7 @@ namespace BakeryOps.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCategory(CategoryDTO newCategory)
         {
-            var category = await categoriesService.CreateCategory(newCategory);
+            var category = await categoriesService.Create(newCategory);
             return Ok(category);
         }
 
@@ -42,7 +42,7 @@ namespace BakeryOps.API.Controllers
         {
             try
             {
-                var updatedCategory = await categoriesService.UpdateCategory( category);
+                var updatedCategory = await categoriesService.Update( category);
                 if (updatedCategory == null)
                 {
                     return NotFound();
@@ -60,7 +60,7 @@ namespace BakeryOps.API.Controllers
         {
             try
             {
-                await categoriesService.DeleteCategory(id);
+                await categoriesService.Delete(id);
                 return Ok();
             }
             catch (Exception e)

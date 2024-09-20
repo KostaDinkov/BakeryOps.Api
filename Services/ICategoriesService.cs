@@ -3,7 +3,7 @@ using BakeryOps.API.Models.DTOs;
 
 namespace BakeryOps.API.Services
 {
-    public interface ICategoriesService
+    public interface ICategoriesService: ICrudService<CategoryDTO>
     {
         public Task<CategoryDTO> CreateCategory(CategoryDTO category);
         public Task<CategoryDTO?> GetCategory(Guid id);

@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BakeryOps.API.Services
 {
-    public class CategoriesService(AppDb db, IMapper mapper) : ICategoriesService
+    public class CategoriesService(AppDb db, IMapper mapper) : ICrudService<CategoryDTO>
     {
-        public async Task<CategoryDTO> CreateCategory(CategoryDTO categoryDTO)
+        public async Task<CategoryDTO> Create(CategoryDTO categoryDTO)
         {
             var newCategory = mapper.Map<Category>(categoryDTO);
 
@@ -17,7 +17,7 @@ namespace BakeryOps.API.Services
             return mapper.Map<CategoryDTO>(newCategory);
         }
 
-        public async Task<CategoryDTO?> GetCategory(Guid id)
+        public async Task<CategoryDTO?> GetById(Guid id)
         {
             var result = await db.Categories.FindAsync(id);
             if (result == null || result.IsDeleted)
@@ -28,13 +28,13 @@ namespace BakeryOps.API.Services
             return mapper.Map<CategoryDTO>(result);
         }
 
-        public async Task<List<CategoryDTO>> GetCategories()
+        public async Task<List<CategoryDTO>> GetAll()
         {
             var result = await db.Categories.Where(c => c.IsDeleted != true).ToListAsync();
             return result.Select(mapper.Map<CategoryDTO>).ToList();
         }
 
-        public async Task<CategoryDTO?> UpdateCategory(CategoryDTO category)
+        public async Task<CategoryDTO?> Update(CategoryDTO category)
         {
             var existingCategory = await db.Categories.FindAsync(category.Id);
             if (existingCategory == null)
@@ -47,7 +47,7 @@ namespace BakeryOps.API.Services
             return mapper.Map<CategoryDTO>(existingCategory);
         }
 
-        public async Task<bool> DeleteCategory(Guid id)
+        public async Task<bool> Delete(Guid id)
         {
             var category = await db.Categories.Include(c=>c.Materials).FirstOrDefaultAsync(c=>c.Id == id);
             if (category == null)
@@ -64,6 +64,11 @@ namespace BakeryOps.API.Services
             }
             await db.SaveChangesAsync();
             return true;
+        }
+
+        public Task<bool> Delete(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

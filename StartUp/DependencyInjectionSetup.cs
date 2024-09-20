@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
 using BakeryOps.API.Data;
+using BakeryOps.API.Models.DTOs;
 using BakeryOps.API.Security;
 using BakeryOps.API.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -67,7 +68,7 @@ namespace BakeryOps.API.StartUp
             builder.Services.AddScoped<IClientsService, ClientsService>();
             builder.Services.AddScoped<IUsersService, UserService>();
             builder.Services.AddScoped<IMaterialsService, MaterialsService>();
-            builder.Services.AddScoped<ICategoriesService, CategoriesService>();
+            builder.Services.AddScoped<ICrudService<CategoryDTO>, CategoriesService>();
             builder.Services.AddScoped<IVendorsService, VendorsService>();
 
             builder.Services.AddAuthentication(options =>
