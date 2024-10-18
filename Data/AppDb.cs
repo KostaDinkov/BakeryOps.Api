@@ -17,6 +17,7 @@ namespace BakeryOps.API.Data
         public DbSet<Material> Materials { get; set; } = null!;
         public DbSet<Vendor> Vendors { get; set; } = null!;
         public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Recipe> Recipes { get; set; } = null!;
 
 
         public DbSet<Permission> Permissions { get; set; } = null!;
@@ -29,8 +30,11 @@ namespace BakeryOps.API.Data
             modelBuilder.Entity<Order>().Navigation(e => e.OrderItems).AutoInclude();
             modelBuilder.Entity<OrderItem>().Navigation(item => item.Product).AutoInclude();
 
-           
+            modelBuilder.Entity<SubRecipe>()
+                .HasOne(sr=>sr.Recipe)
+                .WithMany(r=>r.SubRecipes)
+                .HasForeignKey(sr => sr.RecipeId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
-
     }
 }

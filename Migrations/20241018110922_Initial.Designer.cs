@@ -4,6 +4,7 @@ using BakeryOps.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BakeryOps.API.Migrations
 {
     [DbContext(typeof(AppDb))]
-    partial class AppDbModelSnapshot : ModelSnapshot
+    [Migration("20241018110922_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -331,85 +334,6 @@ namespace BakeryOps.API.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("BakeryOps.API.Models.Recipe", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateOnly>("LastUpdated")
-                        .HasColumnType("date");
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<double>("WorkHours")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Yield")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("Recipes");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.RecipeMaterial", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("IngredientId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MaterialId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MaterialId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("RecipeMaterial");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.SubRecipe", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ParentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<Guid>("RecipeId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("RecipeId");
-
-                    b.ToTable("SubRecipe");
-                });
-
             modelBuilder.Entity("BakeryOps.API.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -555,55 +479,6 @@ namespace BakeryOps.API.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BakeryOps.API.Models.Recipe", b =>
-                {
-                    b.HasOne("BakeryOps.API.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.RecipeMaterial", b =>
-                {
-                    b.HasOne("BakeryOps.API.Models.Material", "Material")
-                        .WithMany()
-                        .HasForeignKey("MaterialId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BakeryOps.API.Models.Recipe", "Recipe")
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Material");
-
-                    b.Navigation("Recipe");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.SubRecipe", b =>
-                {
-                    b.HasOne("BakeryOps.API.Models.Recipe", "Parent")
-                        .WithMany()
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BakeryOps.API.Models.Recipe", "Recipe")
-                        .WithMany("SubRecipes")
-                        .HasForeignKey("RecipeId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Parent");
-
-                    b.Navigation("Recipe");
-                });
-
             modelBuilder.Entity("BakeryOps.API.Models.Category", b =>
                 {
                     b.Navigation("Materials");
@@ -622,13 +497,6 @@ namespace BakeryOps.API.Migrations
             modelBuilder.Entity("BakeryOps.API.Models.Order", b =>
                 {
                     b.Navigation("OrderItems");
-                });
-
-            modelBuilder.Entity("BakeryOps.API.Models.Recipe", b =>
-                {
-                    b.Navigation("Ingredients");
-
-                    b.Navigation("SubRecipes");
                 });
 
             modelBuilder.Entity("BakeryOps.API.Models.User", b =>
